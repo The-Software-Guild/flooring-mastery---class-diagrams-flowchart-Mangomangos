@@ -60,4 +60,8 @@ public class FlooringMasteryView {
     public void displayUnknownCommand(){
         io.print("Invalid input. Please input number 1-6.");
     }
+
+    public void exportOrdersSuccessful(){
+        io.print("Orders Exported!");
+    }
 }
