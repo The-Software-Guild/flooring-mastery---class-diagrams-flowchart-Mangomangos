@@ -13,6 +13,8 @@ public class Order {
     private BigDecimal costPerSquareFoot;
     private BigDecimal laborCostPerSquareFoot;
     private BigDecimal materialCost;
+
+    private BigDecimal laborCost;
     private BigDecimal tax;
     private BigDecimal total;
 
@@ -21,11 +23,21 @@ public class Order {
 
     }
 
-    public Order(int orderNumber, String name, String state, String productType){
+    public Order(int orderNumber, String name, String state, String productType,
+                 BigDecimal taxRate, BigDecimal area, BigDecimal costPerSquareFoot, BigDecimal laborCostPerSquareFoot,
+                 BigDecimal materialCost, BigDecimal laborCost, BigDecimal tax, BigDecimal total){
         this.orderNumber = orderNumber;
         this.customerName = name;
         this.state = state;
         this.productType = productType;
+        this.taxRate = taxRate;
+        this.area = area;
+        this.costPerSquareFoot = costPerSquareFoot;
+        this.laborCostPerSquareFoot = laborCostPerSquareFoot;
+        this.materialCost = materialCost;
+        this.laborCost = laborCost;
+        this.tax = tax;
+        this.total = total;
     }
 
     public int getOrderNumber() {
@@ -70,6 +82,14 @@ public class Order {
 
     public BigDecimal getTaxRate() {
         return taxRate;
+    }
+
+    public BigDecimal getLaborCost() {
+        return laborCost;
+    }
+
+    public void setLaborCost(BigDecimal laborCost) {
+        this.laborCost = laborCost;
     }
 
     public void setTaxRate(BigDecimal taxRate) {
