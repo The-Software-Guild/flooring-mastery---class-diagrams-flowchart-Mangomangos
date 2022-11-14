@@ -38,6 +38,7 @@ public class TaxDaoImpl implements TaxDao{
                             new FileReader(TAX_FILE)
                     )
             );
+            
         } catch (FileNotFoundException e) {
             
         }
