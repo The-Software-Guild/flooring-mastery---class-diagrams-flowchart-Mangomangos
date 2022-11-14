@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -51,14 +52,27 @@ public class FileDaoImpl implements FileDao{
     }
 
     @Override
-    public void writeFile(ArrayList<Order> orders) {
+    public void writeFile(String orderDate, Order order) {
+
+        PrintWriter out;
+
+        try {
+            out = new PrintWriter( new FileWriter("orders_" + orderDate + ".txt"));
+        } catch (IOException e) {
+
+        }
+
+        String oderAsText = marshallOrder(order);
+        out.println();
 
     }
+
+
 
     @Override
     public Map<Integer, Order> readFile(String path) {
 
-        Scanner scanner;
+        Scanner scanner = null;
 
         for (File file : listFiles(pathName)) {
 
