@@ -22,6 +22,7 @@ public class FileDaoImpl implements FileDao{
 
     @Override
     public Order unmarshallOrder(String line) {
+
         String [] orderTokens = line.split(DELIMITER);
         int orderNumber = Integer.parseInt(orderTokens[0]);
         String customerName = orderTokens[1];
@@ -45,10 +46,11 @@ public class FileDaoImpl implements FileDao{
     @Override
     public String marshallOrder(Order order) {
         return order.getOrderNumber() + DELIMITER + order.getCustomerName() + DELIMITER + order.getState() +
-                DELIMITER + order.getTaxRate() + DELIMITER + order.getProductType() + DELIMITER + order.getArea() +
-                DELIMITER + order.getCostPerSquareFoot() + DELIMITER + order.getLaborCostPerSquareFoot() +
-                DELIMITER + order.getMaterialCost() + DELIMITER + order.getLaborCost() + DELIMITER + order.getTax() +
-                DELIMITER + order.getTotal();
+                DELIMITER + order.getTaxRate().toString() + DELIMITER + order.getProductType() + DELIMITER +
+                order.getArea().toString() + DELIMITER + order.getCostPerSquareFoot().toString() + DELIMITER +
+                order.getLaborCostPerSquareFoot().toString() + DELIMITER + order.getMaterialCost().toString() +
+                DELIMITER + order.getLaborCost().toString() + DELIMITER + order.getTax().toString() +
+                DELIMITER + order.getTotal().toString();
     }
 
     @Override
@@ -78,7 +80,7 @@ public class FileDaoImpl implements FileDao{
 
         PrintWriter out = null;
 
-        String fileName = "Orders/order_" + orderDate + ".txt";
+        String fileName = "Orders/orders_" + orderDate + ".txt";
 
         Map<Integer, Order> dayOrders = readFiles(fileName);
 
@@ -110,7 +112,7 @@ public class FileDaoImpl implements FileDao{
 
         PrintWriter out = null;
 
-        String fileName = "Orders/order_" + orderDate + ".txt";
+        String fileName = "Orders/orders_" + orderDate + ".txt";
 
         Map<Integer, Order> dayOrders = readFiles(fileName);
 
