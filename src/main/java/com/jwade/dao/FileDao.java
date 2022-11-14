@@ -22,6 +22,6 @@ public interface FileDao {
 
     void updateRemovedOrderInFile (String orderDate, Order removedOrder);
 
-    void updateOrderInFile(Order newOrder, Order oldOrder, String orderDate);
+    void updateOrderInFile(Order newOrder, String orderDate);
 
 }

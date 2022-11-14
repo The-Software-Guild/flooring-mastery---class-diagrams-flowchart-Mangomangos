@@ -76,13 +76,15 @@ public class FileDaoImpl implements FileDao{
     }
 
     @Override
-    public void updateOrderInFile(Order newOrder, Order oldOrder, String orderDate) {
+    public void updateOrderInFile(Order newOrder, String orderDate) {
 
         PrintWriter out = null;
 
         String fileName = "Orders/orders_" + orderDate + ".txt";
 
         Map<Integer, Order> dayOrders = readFiles(fileName);
+
+        Order oldOrder = dayOrders.get(newOrder.getOrderNumber());
 
         dayOrders.replace(oldOrder.getOrderNumber(), oldOrder, newOrder);
 
