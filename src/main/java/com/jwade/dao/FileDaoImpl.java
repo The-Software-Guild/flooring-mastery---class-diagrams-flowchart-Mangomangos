@@ -27,17 +27,17 @@ public class FileDaoImpl implements FileDao{
         int orderNumber = Integer.parseInt(orderTokens[0]);
         String customerName = orderTokens[1];
         String state = orderTokens[2];
-        BigDecimal taxRate = BigDecimal.valueOf(Double.parseDouble(orderTokens[3]));
+        BigDecimal taxRate = new BigDecimal((orderTokens[3]));
         String productType = orderTokens[4];
-        BigDecimal area = BigDecimal.valueOf(Double.parseDouble(orderTokens[5]));
-        BigDecimal costPerSquareFoot = BigDecimal.valueOf(Double.parseDouble(orderTokens[6]));
-        BigDecimal laborCostPerSquareFoot = BigDecimal.valueOf(Double.parseDouble(orderTokens[7]));
-        BigDecimal materialCost = BigDecimal.valueOf(Double.parseDouble(orderTokens[8]));
-        BigDecimal laborCost = BigDecimal.valueOf((Double.parseDouble(orderTokens[9])));
-        BigDecimal tax = BigDecimal.valueOf(Double.parseDouble(orderTokens[10]));
-        BigDecimal total = BigDecimal.valueOf(Double.parseDouble(orderTokens[11]));
+        BigDecimal area = new BigDecimal(orderTokens[5]);
+        BigDecimal costPerSquareFoot = new BigDecimal(orderTokens[6]);
+        BigDecimal laborCostPerSquareFoot = new BigDecimal(orderTokens[7]);
+        BigDecimal materialCost = new BigDecimal(orderTokens[8]);
+        BigDecimal laborCost = new BigDecimal(orderTokens[9]);
+        BigDecimal tax = new BigDecimal(orderTokens[10]);
+        BigDecimal total = new BigDecimal(orderTokens[11]);
 
-        return new Order(orderNumber, customerName, state, taxRate, productType, area,
+        return new Order(orderNumber, customerName, state, productType, taxRate, area,
                 costPerSquareFoot, laborCostPerSquareFoot, materialCost, laborCost, tax, total);
 
 
