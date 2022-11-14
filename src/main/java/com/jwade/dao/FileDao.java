@@ -2,7 +2,9 @@ package com.jwade.dao;
 
 import com.jwade.dto.Order;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public interface FileDao {
@@ -13,6 +15,8 @@ public interface FileDao {
 
     void writeFile(ArrayList<Order> orders);
 
-    public Map<String, Order> readFile(String file);
+    public Map<Integer, Order> readFile(String file);
+
+    public List<File> listFiles(String path);
 
 }
