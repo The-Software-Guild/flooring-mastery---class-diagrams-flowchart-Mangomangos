@@ -13,7 +13,7 @@ public interface FileDao {
 
     public String marshallOrder(Order order);
 
-    void writeFile(ArrayList<Order> orders);
+    void writeFile(String orderDate, Order order);
 
     public Map<Integer, Order> readFile(String file);
 

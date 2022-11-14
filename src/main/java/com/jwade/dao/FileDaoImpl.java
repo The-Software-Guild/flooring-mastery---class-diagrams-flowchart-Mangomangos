@@ -54,7 +54,7 @@ public class FileDaoImpl implements FileDao{
     @Override
     public void writeFile(String orderDate, Order order) {
 
-        PrintWriter out;
+        PrintWriter out = null;
 
         try {
             out = new PrintWriter( new FileWriter("orders_" + orderDate + ".txt"));
@@ -63,7 +63,8 @@ public class FileDaoImpl implements FileDao{
         }
 
         String oderAsText = marshallOrder(order);
-        out.println();
+        out.println(oderAsText);
+        out.flush();
 
     }
 
