@@ -3,6 +3,7 @@ package com.jwade.ui;
 import com.jwade.dto.Order;
 import com.jwade.dto.Product;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,6 +60,28 @@ public class FlooringMasteryView {
         return  list;
 
     }
+
+
+    public Integer getOrderNumber(){
+        return io.readInt("Please enter an Order Number");
+    }
+
+    public String getOrderDate(){
+        return io.readString("Please enter an Order Date");
+    }
+    public String getOrderName(){
+        return io.readString("What is the customer's name?");
+    }
+
+    public BigDecimal getOrderArea(){
+        return io.readBigDecimal("What is the area of the floor?");
+    }
+
+    public String getOrderState (){
+        return  io.readString("What is the state for billing?");
+    }
+
+
 
     public void displayErrorMessage(String message){
         io.print(message + '\n');
