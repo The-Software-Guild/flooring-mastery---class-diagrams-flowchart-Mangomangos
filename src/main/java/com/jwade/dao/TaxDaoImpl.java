@@ -14,7 +14,7 @@ public class TaxDaoImpl implements TaxDao{
 
     private Map<String, Tax> taxes = new HashMap<>();
 
-    private static final String TAX_FILE = "taxes.txt";
+    private static final String TAX_FILE = "Taxes.txt";
 
     private static final  String DELIMITER = ",";
     @Override

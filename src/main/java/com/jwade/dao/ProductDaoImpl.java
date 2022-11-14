@@ -16,7 +16,7 @@ public class ProductDaoImpl implements ProductDao{
 
     private static final String DELIMITER = ",";
 
-    private static final String PRODUCT_FILE = "products.txt";
+    private static final String PRODUCT_FILE = "Products.txt";
     @Override
     public Product unmarshallProduct(String line) {
         String[] productTokens = line.split(DELIMITER);
