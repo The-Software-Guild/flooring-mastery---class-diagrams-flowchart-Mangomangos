@@ -18,6 +18,10 @@ public class Product {
         this.laborCostPerSquareFoot = labor;
     }
 
+    @Override
+    public String toString() {
+        return productType + ", " + "$" + costPerSquareFoot + ", " + "$" + laborCostPerSquareFoot;
+    }
 
     public String getProductType() {
         return productType;

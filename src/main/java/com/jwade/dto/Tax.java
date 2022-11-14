@@ -18,6 +18,11 @@ public class Tax {
         this.taxRate = taxRate;
     }
 
+    @Override
+    public String toString() {
+        return stateAbbreviation + ", " + stateName + ", " + taxRate;
+    }
+
     public String getStateAbbreviation() {
         return stateAbbreviation;
     }

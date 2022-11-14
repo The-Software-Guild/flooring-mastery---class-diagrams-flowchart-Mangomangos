@@ -40,6 +40,13 @@ public class Order {
         this.total = total;
     }
 
+    @Override
+    public String toString() {
+        return orderNumber + ", " + customerName + ", " + state + ", " + productType + ", " + taxRate +
+                ", " + area + ", $" + costPerSquareFoot + ", $" + laborCostPerSquareFoot + ", $" +
+                materialCost + ", $" + laborCost + ", $" + tax + ", $" + total;
+    }
+
     public int getOrderNumber() {
         return orderNumber;
     }
