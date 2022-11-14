@@ -52,52 +52,120 @@ public class FileDaoImpl implements FileDao{
     }
 
     @Override
-    public void writeFile(String orderDate, Order order) {
+    public void addNewOrderToFile(String orderDate, Order order) {
+
+        String fileName = "orders_" + orderDate + ".txt";
 
         PrintWriter out = null;
 
-        try {
-            out = new PrintWriter( new FileWriter("orders_" + orderDate + ".txt"));
-        } catch (IOException e) {
+        File orderFile = new File("Orders/" + fileName);
 
+        try {
+            orderFile.createNewFile();
+            out = new PrintWriter( new FileWriter(fileName));
+        } catch (IOException e) {
         }
 
         String oderAsText = marshallOrder(order);
         out.println(oderAsText);
         out.flush();
+        out.close();
+
+    }
+
+    @Override
+    public void updateOrderInFile(Order newOrder, Order oldOrder, String orderDate) {
+
+        PrintWriter out = null;
+
+        String fileName = "Orders/order_" + orderDate + ".txt";
+
+        Map<Integer, Order> dayOrders = readFiles(fileName);
+
+        dayOrders.replace(oldOrder.getOrderNumber(), oldOrder, newOrder);
+
+        File orderFile = new File(fileName);
+
+        orderFile.delete();
+
+        try {
+            orderFile.createNewFile();
+            out = new PrintWriter( new FileWriter(fileName));
+        } catch (IOException e){
+
+        }
+
+        String orderAsText;
+        for (Order currentOrder : new ArrayList<>(dayOrders.values())){
+            orderAsText = marshallOrder(currentOrder);
+            out.println(orderAsText);
+            out.flush();
+        }
+        out.close();
+
+    }
+
+    @Override
+    public void updateRemovedOrderInFile(String orderDate, Order removedOrder) {
+
+        PrintWriter out = null;
+
+        String fileName = "Orders/order_" + orderDate + ".txt";
+
+        Map<Integer, Order> dayOrders = readFiles(fileName);
+
+        dayOrders.remove(removedOrder.getOrderNumber());
+
+        File orderFile = new File(fileName);
+
+        orderFile.delete();
+
+        try {
+            orderFile.createNewFile();
+            out = new PrintWriter( new FileWriter(fileName));
+        } catch (IOException e){
+
+        }
+
+        String orderAsText;
+        for (Order currentOrder : new ArrayList<>(dayOrders.values())){
+            orderAsText = marshallOrder(currentOrder);
+            out.println(orderAsText);
+            out.flush();
+        }
+        out.close();
 
     }
 
 
 
     @Override
-    public Map<Integer, Order> readFile(String path) {
+    public Map<Integer, Order> readFile(String file) {
+
+        Map<Integer, Order> dayOrders = new HashMap<>();
 
         Scanner scanner = null;
 
-        for (File file : listFiles(pathName)) {
-
-            try {
-                scanner = new Scanner(
-                        new BufferedReader(
-                                new FileReader(file)
-                        )
-                );
-            } catch (FileNotFoundException e) {
-            }
-
-            String currentLine;
-            Order currentOrder;
-
-            while (scanner.hasNextLine()) {
-                currentLine = scanner.nextLine();
-                currentOrder = unmarshallOrder(currentLine);
-                orders.put(currentOrder.getOrderNumber(), currentOrder);
-            }
-
-            scanner.close();
+        try {
+            scanner = new Scanner(
+                    new BufferedReader(
+                            new FileReader(file)
+                    )
+            );
+        } catch (FileNotFoundException e) {
         }
-        return orders;
+
+        String currentLine;
+        Order currentOrder;
+
+        while (scanner.hasNextLine()) {
+            currentLine = scanner.nextLine();
+            currentOrder = unmarshallOrder(currentLine);
+            dayOrders.put(currentOrder.getOrderNumber(), currentOrder);
+        }
+
+        scanner.close();
+        return  dayOrders;
     }
 
 
@@ -116,6 +184,15 @@ public class FileDaoImpl implements FileDao{
 
         return filesInFolder;
     }
+
+    @Override
+    public Map<Integer, Order> readFiles(String path) {
+        for (File file : listFiles(pathName)) {
+            orders.putAll(readFile(file.getName()));
+        }
+        return orders;
+    }
+
 
 
 }
