@@ -1,5 +1,11 @@
 package com.jwade.ui;
 
+import com.jwade.dto.Order;
+import com.jwade.dto.Product;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class FlooringMasteryView {
 
     private UserIO io;
@@ -24,6 +30,36 @@ public class FlooringMasteryView {
 
     }
 
+    public String getMenuSelection(){
+        return  io.readString("Please select an operation.");
+    }
+
+    public ArrayList<String> printAllProducts(List<Product> productList){
+        allProductsBanner();
+        int j=1;
+        ArrayList<String> list = new ArrayList<>();
+        list.add(0, "null");
+        for (Product i: productList){
+            io.print(j + ". " + i.toString());
+            list.add(j, i.getProductType());
+            j++;
+        }
+        return list;
+    }
+
+    public ArrayList<Integer> printAllOrders(List<Order> orderList) {
+        allOrdersBanner();
+        int j=1;
+        ArrayList<Integer> list = new ArrayList<>();
+        list.add(0, 0);
+        for (Order i: orderList){
+            io.print(j + ". " + i.toString());
+            list.add(j, i.getOrderNumber());
+        }
+        return  list;
+
+    }
+
     public void displayErrorMessage(String message){
         io.print(message + '\n');
         io.readString("Please hit enter to continue");
@@ -36,6 +72,8 @@ public class FlooringMasteryView {
     public void allOrdersBanner(){
         io.print("======All Orders======");
     }
+
+    public void allProductsBanner(){io.print("=====All Products=====");}
 
     public void editOrderBanner(){
         io.print("======Edit Order======");
