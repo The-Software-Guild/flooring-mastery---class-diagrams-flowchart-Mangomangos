@@ -41,5 +41,7 @@ public interface FlooringMasteryDao {
 
     BigDecimal updateTotal(Order order, BigDecimal newTotal);
 
+    Integer generateCurrentMaxOrderNumber(List<Order> listOfOrders);
+
 
 }

@@ -3,10 +3,7 @@ package com.jwade.dao;
 import com.jwade.dto.Order;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class FlooringMasteryDaoImpl implements FlooringMasteryDao {
 
@@ -122,6 +119,18 @@ public class FlooringMasteryDaoImpl implements FlooringMasteryDao {
     public BigDecimal updateTotal(Order order, BigDecimal newTotal) {
         order.setTotal(newTotal);
         return newTotal;
+    }
+
+    @Override
+    public Integer generateCurrentMaxOrderNumber(List<Order> listOfOrders) {
+        List<Integer> listOfOrderNumbers = new ArrayList<>();
+        listOfOrders = listAllOrders();
+        for (Order order: listOfOrders){
+            listOfOrderNumbers.add(order.getOrderNumber());
+        }
+
+        return Collections.max(listOfOrderNumbers);
+
     }
 
 
