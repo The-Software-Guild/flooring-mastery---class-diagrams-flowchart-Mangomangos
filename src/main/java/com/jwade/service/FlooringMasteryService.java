@@ -12,23 +12,32 @@ public interface FlooringMasteryService {
 
     List<Order> listAllOrders();
 
+    List<Order> listAllOrdersForDay(String orderDate);
+
     List<Product> listAllProducts();
 
     Order removeOrder(String orderDate, Integer orderNumber);
 
     Integer generateOrderNumber();
 
-    String setAndValidateCustomerName();
+    Boolean validateCustomerName(String inputName);
 
-    String setAndValidateCustomerState();
+    Boolean validateCustomerState(String inputState);
 
     String setCustomerProduct();
 
-    BigDecimal setAndValidateFloorArea();
+    Boolean validateFloorArea(BigDecimal area);
 
-    BigDecimal generateTaxRate(String stateAbbreviation);
+    BigDecimal generateTaxRate(String state);
+
+    Boolean validateOrderDate(String orderDate);
 
     Order addOrder (Integer orderNumber, String customerName, String state, String product, BigDecimal area, BigDecimal taxRate);
+
+    Order editOrder (Order currentOrder);
+
+    Order removeOrder (Order currentOrder);
+
 
 
 
