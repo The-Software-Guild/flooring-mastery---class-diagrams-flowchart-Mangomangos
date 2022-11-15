@@ -4,11 +4,13 @@ import com.jwade.dao.FlooringMasteryDaoImpl;
 import com.jwade.dao.FlooringMasteryException;
 import com.jwade.dto.Order;
 import com.jwade.dto.Product;
+import com.jwade.dto.Tax;
 import com.jwade.service.FlooringMasteryService;
 import com.jwade.service.FlooringMasteryServiceImpl;
 import com.jwade.ui.FlooringMasteryView;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public class FlooringMasteryController {
 
@@ -55,13 +57,58 @@ public class FlooringMasteryController {
     }
 
     public void addOrder(){
-        while(!service.validateOrderDate(view.getOrderDate())){
-            String orderDate = view.getOrderDate();
-            service.validateOrderDate(orderDate);
+        Boolean validDate = false;
+        String orderDate = "";
+        while(!validDate){
+            orderDate = view.getOrderDate();
+            validDate = service.validateOrderDate(orderDate);
         }
-        String orderName = view.getOrderName();
-        String orderState = view.getOrderState();
-        BigDecimal orderArea = view.getOrderArea();
+
+        Boolean validName = false;
+        String orderName = "";
+        while (!validName){
+            orderName = view.getOrderName();
+            validName = service.validateCustomerName(orderName);
+        }
+
+        Boolean validState = false;
+        String stateAbbreviation = "";
+        Tax chosenState = null;
+        while (!validState) {
+            String inputState = view.getOrderState();
+            chosenState = service.validateCustomerState(inputState);
+            if (chosenState != null) {
+                validState = true;
+                stateAbbreviation = service.setCustomerState(chosenState);
+            }
+        }
+
+        BigDecimal taxRate = service.generateTaxRate(chosenState);
+
+        view.allProductsBanner();
+        List<Product> productList = service.listAllProducts();
+        view.printAllProducts(productList);
+        int selection = view.getProductSelection(1, productList.size());
+        Product chosenProduct = productList.get(selection-1);
+        String productType = service.setCustomerProduct(chosenProduct);
+
+        Boolean validArea = false;
+        BigDecimal area = null;
+        while (!validArea){
+            area = view.getOrderArea();
+            validArea = service.validateFloorArea(area);
+        }
+
+        BigDecimal costPerSquareFoot = service.setCostPerSquareFoot(chosenProduct);
+        BigDecimal laborCostPerSquareFoot = service.setLaborCostPerSquareFoot(chosenProduct);
+        BigDecimal materialCost = service.calculateMaterialCost(area,chosenProduct);
+        BigDecimal laborCost = service.calculateLaborCost(area,chosenProduct);
+        BigDecimal tax = service.calculateTax(materialCost, laborCost, taxRate);
+        BigDecimal total = service.calculateTotal(materialCost, laborCost, tax);
+
+        service.addOrder(orderDate, orderName, stateAbbreviation, productType, taxRate, area, costPerSquareFoot,
+                laborCostPerSquareFoot, materialCost, laborCost, tax, total);
+
         view.orderAddedSuccessful();
     }
 
@@ -74,28 +121,12 @@ public class FlooringMasteryController {
         String orderDate = view.getOrderDate();
         Integer orderNumber = view.getOrderNumber();
         Order currentOrder = service.getOrder(orderDate, orderNumber);
-        boolean keepGoing = true;
-        while (keepGoing) {
-            String operation = view.getMenuSelection();
-            switch (operation) {
-                case "1": // edit customer name
-                    editCustomerName(currentOrder);
-                    break;
-                case "2": // edit state
-                    editState(currentOrder);
-                    break;
-                case "3": // edit product type
-                    editProductType(currentOrder);
-                    break;
-                case "4": // edit area
-                    editArea(currentOrder);
-                case "5": // quit
-                    keepGoing = false;
-                    break;
-                default:
-                    view.displayUnknownCommand();
-            }
-        }
+        String newName = view.editCustomerName(currentOrder);
+        String newState = view.editCustomerState(currentOrder);
+        view.editProductType(currentOrder);
+        view.printAllProducts(service.listAllProducts());
+        BigDecimal newArea = view.editArea(currentOrder);
+
     }
 
     private void editArea(Order currentOrder) {
