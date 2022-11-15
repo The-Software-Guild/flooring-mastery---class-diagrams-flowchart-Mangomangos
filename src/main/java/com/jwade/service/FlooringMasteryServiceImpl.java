@@ -88,8 +88,8 @@ public class FlooringMasteryServiceImpl implements FlooringMasteryService{
     }
 
     @Override
-    public String setCustomerProduct() {
-        return null;
+    public String setCustomerProduct(Product product) {
+        return product.getProductType();
     }
 
     @Override

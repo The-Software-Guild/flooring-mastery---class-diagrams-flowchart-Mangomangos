@@ -27,7 +27,7 @@ public interface FlooringMasteryService {
 
     String setCustomerState (Tax taxObject);
 
-    String setCustomerProduct();
+    String setCustomerProduct(Product product);
 
     Boolean validateFloorArea(BigDecimal area);
 
