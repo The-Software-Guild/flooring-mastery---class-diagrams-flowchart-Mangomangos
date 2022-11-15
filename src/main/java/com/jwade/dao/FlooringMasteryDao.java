@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface FlooringMasteryDao {
 
-    Order getOrder(Integer orderNumber);
+    Order getOrder(String orderDate, Integer orderNumber);
 
     List<Order> listAllOrders();
 

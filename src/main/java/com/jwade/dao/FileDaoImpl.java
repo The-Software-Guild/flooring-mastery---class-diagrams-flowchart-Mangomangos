@@ -110,6 +110,12 @@ public class FileDaoImpl implements FileDao{
     }
 
     @Override
+    public Boolean doesFileExist(String orderDate) {
+        File f = new File("Orders/orders_" + orderDate + ".txt");
+        return f.exists();
+    }
+
+    @Override
     public void updateRemovedOrderInFile(String orderDate, Order removedOrder) {
 
         PrintWriter out = null;
@@ -144,7 +150,7 @@ public class FileDaoImpl implements FileDao{
 
 
     @Override
-    public Map<Integer, Order> readFile(String file) {
+    public Map<Integer, Order> readFile(String orderDate) {
 
         Map<Integer, Order> dayOrders = new HashMap<>();
 
@@ -153,7 +159,7 @@ public class FileDaoImpl implements FileDao{
         try {
             scanner = new Scanner(
                     new BufferedReader(
-                            new FileReader(file)
+                            new FileReader("Orders/orders_" + orderDate + ".txt")
                     )
             );
         } catch (FileNotFoundException e) {

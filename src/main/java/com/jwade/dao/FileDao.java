@@ -24,4 +24,6 @@ public interface FileDao {
 
     void updateOrderInFile(Order newOrder, String orderDate);
 
+    Boolean doesFileExist(String orderDate);
+
 }

@@ -19,8 +19,16 @@ public class FlooringMasteryDaoImpl implements FlooringMasteryDao {
     }
 
     @Override
-    public Order getOrder(Integer orderNumber) {
-        return orderMap.get(orderNumber);
+    public Order getOrder(String orderDate, Integer orderNumber) {
+        if (fileDao.doesFileExist(orderDate)){
+            Map<Integer, Order> orders = fileDao.readFile(orderDate);
+            if (orders.get(orderNumber) != null){
+                return orders.get(orderNumber);
+            }
+        }
+        return null;
+
+
     }
 
     @Override
