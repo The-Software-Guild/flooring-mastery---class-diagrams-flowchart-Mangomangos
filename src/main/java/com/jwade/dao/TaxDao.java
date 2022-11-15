@@ -12,5 +12,7 @@ public interface TaxDao {
     public Map<String, Tax> readFile(String file);
 
     public List<Tax> listOfTaxes();
+
+    public Tax getTax(String stateAbbreviation);
 }
 

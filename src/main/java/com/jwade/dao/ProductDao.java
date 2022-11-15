@@ -13,4 +13,6 @@ public interface ProductDao {
 
     public List<Product> listOfProducts ();
 
+    public Product getProduct (String productType);
+
 }

@@ -58,4 +58,9 @@ public class ProductDaoImpl implements ProductDao{
         return new ArrayList<>(products.values());
     }
 
+    @Override
+    public Product getProduct(String productType) {
+        return products.get(productType);
+    }
+
 }

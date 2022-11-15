@@ -62,4 +62,11 @@ public class TaxDaoImpl implements TaxDao{
     public List<Tax> listOfTaxes() {
         return new ArrayList<>(taxes.values());
     }
+
+    @Override
+    public Tax getTax(String stateAbbreviation) {
+        return taxes.get(stateAbbreviation.toUpperCase());
+    }
+
+
 }
