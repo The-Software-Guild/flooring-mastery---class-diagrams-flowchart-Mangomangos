@@ -35,9 +35,10 @@ public interface FlooringMasteryService {
 
     Boolean validateOrderDate(String orderDate);
 
-    void addOrder (String orderDate, String customerName, String state, String product, BigDecimal taxRate, BigDecimal area,
+    Order createOrder (String orderDate, String customerName, String state, String product, BigDecimal taxRate, BigDecimal area,
                     BigDecimal costPerSquareFoot, BigDecimal laborCostPerSquareFoot, BigDecimal materialCost,
                     BigDecimal laborCost, BigDecimal tax, BigDecimal total);
+    void addOrder(String orderDate, Order order);
 
     String editOrderName (String newName, Order currentOrder);
 
@@ -58,7 +59,7 @@ public interface FlooringMasteryService {
 
     BigDecimal calculateLaborCost (BigDecimal area, Product product);
 
-    BigDecimal calculateTax (BigDecimal area, BigDecimal materialCost, BigDecimal laborCost, BigDecimal taxRate);
+    BigDecimal calculateTax (BigDecimal materialCost, BigDecimal laborCost, BigDecimal taxRate);
 
     BigDecimal calculateTotal(BigDecimal materialCost, BigDecimal laborCost, BigDecimal tax);
 

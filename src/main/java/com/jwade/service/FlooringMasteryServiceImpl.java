@@ -98,16 +98,19 @@ public class FlooringMasteryServiceImpl implements FlooringMasteryService{
     }
 
     @Override
-    public void addOrder(String orderDate, String customerName, String state, String product, BigDecimal taxRate, BigDecimal area,
+    public Order createOrder (String orderDate, String customerName, String state, String product, BigDecimal taxRate, BigDecimal area,
                           BigDecimal costPerSquareFoot, BigDecimal laborCostPerSquareFoot, BigDecimal materialCost,
                           BigDecimal laborCost, BigDecimal tax, BigDecimal total) {
 
         Integer orderNumber = generateOrderNumber();
-        Order currentOrder = new Order(orderNumber, customerName, state, product,
+        return new Order(orderNumber, customerName, state, product,
                 taxRate, area, costPerSquareFoot, laborCostPerSquareFoot, materialCost, laborCost, tax, total);
 
-        dao.addOrder(orderDate, currentOrder);
+    }
 
+    @Override
+    public void addOrder(String orderDate, Order order) {
+        dao.addOrder(orderDate, order);
 
     }
 
@@ -163,7 +166,7 @@ public class FlooringMasteryServiceImpl implements FlooringMasteryService{
         BigDecimal newMaterialCost = calculateMaterialCost(area, orderProductInfo);
         dao.updateMaterialCost(currentOrder, newMaterialCost);
 
-        BigDecimal newTaxCost = calculateTax(area, newMaterialCost, newLaborCost, newTaxRate);
+        BigDecimal newTaxCost = calculateTax(newMaterialCost, newLaborCost, newTaxRate);
         dao.updateTax(currentOrder, newTaxCost);
 
         BigDecimal newTotal = calculateTotal(newMaterialCost, newLaborCost, newTaxCost);
@@ -192,7 +195,7 @@ public class FlooringMasteryServiceImpl implements FlooringMasteryService{
     }
 
     @Override
-    public BigDecimal calculateTax(BigDecimal area, BigDecimal materialCost, BigDecimal laborCost, BigDecimal taxRate) {
+    public BigDecimal calculateTax(BigDecimal materialCost, BigDecimal laborCost, BigDecimal taxRate) {
        BigDecimal totalCosts = materialCost.add(laborCost);
        BigDecimal taxPercentage = taxRate.divide(new BigDecimal(100), RoundingMode.HALF_UP);
        return totalCosts.multiply(taxPercentage);
