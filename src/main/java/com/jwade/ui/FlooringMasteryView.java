@@ -69,6 +69,12 @@ public class FlooringMasteryView {
 
     }
 
+    public String confirmationSaveOrder(Order order){
+        return  io.readString("Confirm save order Y/N \n" + order.toString());
+    }
+    public String confirmationRemoveOrder(Order order){
+        return  io.readString("Confirm remove order Y/N: \n" + order.toString());
+    }
 
     public Integer getOrderNumber(){
         return io.readInt("Please enter an Order Number");
@@ -127,7 +133,7 @@ public class FlooringMasteryView {
     }
 
     public void displayUnknownCommand(){
-        io.print("Invalid input. Please input number 1-6.");
+        io.print("Invalid input.");
     }
 
     public void exportOrdersSuccessful(){
