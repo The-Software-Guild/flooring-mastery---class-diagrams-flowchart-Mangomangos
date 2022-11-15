@@ -106,10 +106,17 @@ public class FlooringMasteryController {
         BigDecimal tax = service.calculateTax(materialCost, laborCost, taxRate);
         BigDecimal total = service.calculateTotal(materialCost, laborCost, tax);
 
-        service.addOrder(orderDate, orderName, stateAbbreviation, productType, taxRate, area, costPerSquareFoot,
+
+
+        Order currentOrder = service.createOrder(orderDate, orderName, stateAbbreviation, productType, taxRate, area, costPerSquareFoot,
                 laborCostPerSquareFoot, materialCost, laborCost, tax, total);
 
-        view.orderAddedSuccessful();
+        String toSave = view.confirmationSaveOrder(currentOrder);
+        if (toSave.equalsIgnoreCase("y")){
+            service.addOrder(orderDate, currentOrder);
+            view.orderAddedSuccessful();
+        }
+
     }
 
     public void listOrders(){
