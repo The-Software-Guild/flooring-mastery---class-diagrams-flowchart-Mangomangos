@@ -6,9 +6,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 public class ProductDaoImpl implements ProductDao{
 
@@ -53,6 +51,11 @@ public class ProductDaoImpl implements ProductDao{
 
         scanner.close();
         return  products;
+    }
+
+    @Override
+    public List<Product> listOfProducts() {
+        return new ArrayList<>(products.values());
     }
 
 }

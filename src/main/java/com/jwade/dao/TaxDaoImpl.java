@@ -6,9 +6,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 public class TaxDaoImpl implements TaxDao{
 
@@ -17,6 +15,10 @@ public class TaxDaoImpl implements TaxDao{
     private static final String TAX_FILE = "Taxes.txt";
 
     private static final  String DELIMITER = ",";
+    public TaxDaoImpl (){
+        this.taxes = readFile(TAX_FILE);
+
+    }
     @Override
     public Tax unmarshallTaxes(String line) {
 
@@ -54,5 +56,10 @@ public class TaxDaoImpl implements TaxDao{
         
         scanner.close();
         return taxes;
+    }
+
+    @Override
+    public List<Tax> listOfTaxes() {
+        return new ArrayList<>(taxes.values());
     }
 }
