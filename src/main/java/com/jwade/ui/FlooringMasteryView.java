@@ -31,6 +31,14 @@ public class FlooringMasteryView {
 
     }
 
+    public void printEditMenu(){
+        io.print("1. Edit customer name");
+        io.print("2. Edit state");
+        io.print("3. Edit product type");
+        io.print("4. Edit flooring area");
+        io.print("5. Exit");
+    }
+
     public String getMenuSelection(){
         return  io.readString("Please select an operation.");
     }
