@@ -32,32 +32,20 @@ public class FlooringMasteryController {
             String operation = view.getMenuSelection();
             switch (operation) {
                 case "1": // display order
-                    try {
+                    try{
                         listOrders();
-                    } catch (FlooringMasteryPersistenceException e) {
+                    } catch (FlooringMasteryPersistenceException e){
                         view.displayErrorMessage(e.getMessage());
                     }
                     break;
                 case "2": //add an order
-                    try {
-                        addOrder();
-                    } catch (FlooringMasteryPersistenceException | FlooringMasteryDataValidationException e){
-                        view.displayErrorMessage(e.getMessage());
-                }
+                    addOrder();
                     break;
                 case "3": //edit an order
-                    try {
-                        editOrder();
-                    } catch (FlooringMasteryPersistenceException | FlooringMasteryDataValidationException e){
-                        view.displayErrorMessage(e.getMessage());
-                    }
+                    editOrder();
                     break;
                 case "4": // remove an order
-                    try {
-                        removeAnOrder();
-                    } catch (FlooringMasteryPersistenceException e) {
-                        view.displayErrorMessage(e.getMessage());
-                    }
+                    removeAnOrder();
                     break;
                 case "5": // export all data
                     exportData();
@@ -84,31 +72,42 @@ public class FlooringMasteryController {
     public void addOrder() throws FlooringMasteryDataValidationException, FlooringMasteryPersistenceException {
 
         // check if date is valid then save as order date field
-        Boolean validDate = false;
+        boolean validDate = false;
         String orderDate = "";
         while(!validDate){
             orderDate = view.getOrderDate();
-            validDate = service.validateOrderDate(orderDate);
+            try {
+                validDate = service.validateOrderDate(orderDate);
+            } catch (FlooringMasteryDataValidationException e){
+                view.displayErrorMessage(e.getMessage());
+            }
         }
         // check if name is valid then save as name field
-        Boolean validName = false;
+        boolean validName = false;
         String orderName = "";
         while (!validName){
             orderName = view.getOrderName();
-            validName = service.validateCustomerName(orderName);
+            try{
+                validName = service.validateCustomerName(orderName);
+            } catch (FlooringMasteryDataValidationException e){
+                view.displayErrorMessage(e.getMessage());
+            }
         }
 
         //check if state is a valid state in taxFile then save as state abbreviation field
-        Boolean validState = false;
+        boolean validState = false;
         String stateAbbreviation = "";
         Tax chosenState = null;
         while (!validState) {
             String inputState = view.getOrderState();
-            chosenState = service.validateCustomerState(inputState);
-            if (chosenState != null) {
-                validState = true;
-                stateAbbreviation = service.setCustomerState(chosenState);
+            try{
+                chosenState = service.validateCustomerState(inputState);
+            } catch (FlooringMasteryDataValidationException e){
+                view.displayErrorMessage(e.getMessage());
             }
+            validState = true;
+            assert chosenState != null;
+            stateAbbreviation = service.setCustomerState(chosenState);
         }
 
         // use previous selected state to generate the tax rate
@@ -123,11 +122,15 @@ public class FlooringMasteryController {
         String productType = service.setCustomerProduct(chosenProduct);
 
         // check if area is >= 100 and set as area field
-        Boolean validArea = false;
-        BigDecimal area = null;
+        boolean validArea = false;
+        BigDecimal area = BigDecimal.valueOf(0);
         while (!validArea){
             area = view.getOrderArea();
-            validArea = service.validateFloorArea(area);
+            try {
+                validArea = service.validateFloorArea(area);
+            }catch (FlooringMasteryDataValidationException e) {
+                view.displayErrorMessage(e.getMessage());
+            }
         }
 
         // finished with validating -- setting the other calculated fields of the order
@@ -145,7 +148,11 @@ public class FlooringMasteryController {
         //Asking user if they want to save and only saving to file if user hits y
         String toSave = view.confirmationSaveOrder(currentOrder);
         if (toSave.equalsIgnoreCase("y")){
-            service.addOrder(orderDate, currentOrder);
+            try{
+                service.addOrder(orderDate, currentOrder);
+            } catch (FlooringMasteryPersistenceException e){
+                view.displayErrorMessage(e.getMessage());
+            }
             view.orderAddedSuccessful();
         }
 
@@ -158,15 +165,51 @@ public class FlooringMasteryController {
         //user enter order information to grab order if exists
         String orderDate = view.getOrderDate();
         Integer orderNumber = view.getOrderNumber();
-        Order currentOrder = service.getOrder(orderDate, orderNumber);
+
+        Order currentOrder = null;
+
+        while (currentOrder == null){
+            try{
+                currentOrder = service.getOrder(orderDate, orderNumber);
+            } catch (FlooringMasteryPersistenceException e){
+                view.displayErrorMessage(e.getMessage());
+            }
+        }
 
         //User prompted to change name first
         String newName = view.editCustomerName(currentOrder);
-        service.editOrderName(newName, currentOrder);
+        if (!newName.isEmpty()){
+            boolean validName = false;
+            while(!validName){
+                try{
+                    validName = service.validateCustomerName(newName);
+                } catch (FlooringMasteryDataValidationException e){
+                    view.displayErrorMessage(e.getMessage());
+                }
+                newName = view.editCustomerName(currentOrder);
+            }
+            service.editOrderName(newName, currentOrder);
+        }
 
-        //User prompted to change name
+
+
+        //User prompted to change State Name
         String newState = view.editCustomerState(currentOrder);
-        service.editState(newState, currentOrder);
+        if (!newState.isEmpty()){
+            Tax chosenState = null;
+            boolean validState = false;
+            while(!validState){
+                try{
+                    chosenState = service.validateCustomerState(newState);
+                    validState = true;
+                } catch (FlooringMasteryDataValidationException e){
+                    view.displayErrorMessage(e.getMessage());
+                }
+                newState = view.editCustomerState(currentOrder);
+            }
+            service.editState(chosenState.getStateAbbreviation(), currentOrder);
+        }
+
 
         //user prompted to change product type
         String newProductType = view.editProductType(currentOrder);
@@ -174,9 +217,25 @@ public class FlooringMasteryController {
         service.editProduct(newProductType, currentOrder);
 
         //user prompted to change area of floor
-        BigDecimal newArea = view.editArea(currentOrder);
-        service.editArea(newArea, currentOrder);
+        String newArea = view.editArea(currentOrder);
+        if (!newArea.isEmpty()){
+            BigDecimal area = null;
+            boolean validArea = false;
+            while (!validArea){
+                try {
+                    area = service.editAreaInputFromString(newArea);
+                    service.validateFloorArea(area);
+                    validArea = true;
+                } catch (FlooringMasteryDataValidationException e){
+                    view.displayErrorMessage(e.getMessage());
+                }
+                newArea = view.editArea(currentOrder);
+            }
+            service.editArea(area, currentOrder);
 
+        }
+
+        //update the rest of the calculated fields
         currentOrder = service.editOrder(currentOrder);
 
         String toEdit = view.confirmationSaveOrder(currentOrder);
