@@ -158,11 +158,13 @@ public class FlooringMasteryServiceImpl implements FlooringMasteryService{
 
     @Override
     public Order editOrder(String orderDate, Order currentOrder) {
+
+        //Grab necessary information to set the remaining calculating fields
         Tax orderTaxInfo = taxDao.getTax(currentOrder.getState());
-
         Product orderProductInfo = productDao.getProduct(currentOrder.getProductType());
-
         BigDecimal area = currentOrder.getArea();
+
+        ///edit the calculated fields and update it in the map
         BigDecimal newTaxRate = dao.updateTaxRate(currentOrder, orderTaxInfo.getTaxRate());
         dao.updateCostPerSquareFoot(currentOrder, orderProductInfo.getCostPerSquareFoot());
         dao.updateLaborCostPerSquareFoot(currentOrder, orderProductInfo.getLaborCostPerSquareFoot());
@@ -178,6 +180,7 @@ public class FlooringMasteryServiceImpl implements FlooringMasteryService{
 
         BigDecimal newTotal = calculateTotal(newMaterialCost, newLaborCost, newTaxCost);
         dao.updateTotal(currentOrder, newTotal);
+
         return  currentOrder;
     }
 
