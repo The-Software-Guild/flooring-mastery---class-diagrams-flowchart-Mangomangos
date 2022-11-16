@@ -30,7 +30,7 @@ public interface FlooringMasteryService {
 
     String setCustomerProduct(Product product);
 
-    Boolean validateFloorArea(BigDecimal area);
+    Boolean validateFloorArea(BigDecimal area) throws FlooringMasteryDataValidationException;
 
     BigDecimal generateTaxRate(Tax taxObject);
 
@@ -45,9 +45,9 @@ public interface FlooringMasteryService {
 
     String editState (String state, Order currentOrder) throws FlooringMasteryDataValidationException;
 
-    Product editProduct (String inputProduct, Order currentOrder);
+    Product editProduct (String inputProduct, Order currentOrder) throws FlooringMasteryDataValidationException;
 
-    BigDecimal editArea (BigDecimal area, Order currentOrder);
+    BigDecimal editArea (BigDecimal area, Order currentOrder) throws FlooringMasteryDataValidationException;
 
     Order editOrder (Order currentOrder);
 
@@ -65,6 +65,8 @@ public interface FlooringMasteryService {
     BigDecimal calculateTotal(BigDecimal materialCost, BigDecimal laborCost, BigDecimal tax);
 
     void updateOrdersInFile(String orderDate) throws FlooringMasteryPersistenceException;
+
+    BigDecimal editAreaInputFromString(String area) throws FlooringMasteryDataValidationException;
 
 
 

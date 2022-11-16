@@ -126,8 +126,13 @@ public class FlooringMasteryServiceImpl implements FlooringMasteryService{
     }
 
     @Override
-    public Boolean validateFloorArea(BigDecimal area) {
-        return area.compareTo(BigDecimal.valueOf(100)) >= 0;
+    public Boolean validateFloorArea(BigDecimal area) throws FlooringMasteryDataValidationException {
+        if (area.compareTo(BigDecimal.valueOf(100)) >= 0){
+            return true;
+        }
+        throw new FlooringMasteryDataValidationException(
+                "Invalid area. Minimum value must be >=100"
+        );
     }
 
     @Override
@@ -148,46 +153,43 @@ public class FlooringMasteryServiceImpl implements FlooringMasteryService{
     }
 
     @Override
-    public String editOrderName(String newName, Order currentOrder) throws FlooringMasteryDataValidationException {
-        if (!newName.isBlank()){
-            if (validateCustomerName(newName)) {
-                dao.updateCustomerName(currentOrder, newName);
-            }
-        }
-        return currentOrder.getCustomerName();
+    public String editOrderName(String newName, Order currentOrder){
+        return dao.updateCustomerName(currentOrder, newName);
     }
 
     @Override
-    public String editState(String state, Order currentOrder) throws FlooringMasteryDataValidationException {
-        if (!state.isBlank()){
-            Tax tax = validateCustomerState(state);
-            if (tax != null){
-                dao.updateCustomerState(currentOrder, state);
-            }
-        }
-        return currentOrder.getState();
+    public String editState(String state, Order currentOrder){
+        return dao.updateCustomerState(currentOrder, state);
+
     }
 
     @Override
-    public Product editProduct(String inputProduct, Order currentOrder) {
+    public Product editProduct(String inputProduct, Order currentOrder) throws FlooringMasteryDataValidationException {
 
-        Product requestedProduct = productDao.getProduct(inputProduct);
-
-        if (requestedProduct.getCostPerSquareFoot() !=null){
-            dao.updateProductType(currentOrder, requestedProduct.getProductType());
-            return requestedProduct;
+        int productNumber;
+        try{
+            productNumber = Integer.parseInt(inputProduct);
+        } catch (NumberFormatException e){
+            throw new FlooringMasteryDataValidationException(
+                    "Invalid Input. Please pick a number from the list of products."
+            );
         }
-        return(productDao.getProduct(currentOrder.getProductType()));
+
+        Product requestedProduct;
+        try {
+            requestedProduct = listAllProducts().get(productNumber);
+        } catch (IndexOutOfBoundsException e){
+            throw new FlooringMasteryDataValidationException(
+                    "Invalid Input: Chosen value not a product on list"
+            );
+        }
+        dao.updateProductType(currentOrder, requestedProduct.getProductType());
+        return requestedProduct;
     }
 
     @Override
     public BigDecimal editArea(BigDecimal area, Order currentOrder) {
-        if (area != null){
-            if (validateFloorArea(area)){
-                dao.updateArea(currentOrder, area);
-            }
-        }
-        return currentOrder.getArea();
+        return dao.updateArea(currentOrder, area);
     }
 
     @Override
@@ -253,6 +255,17 @@ public class FlooringMasteryServiceImpl implements FlooringMasteryService{
     @Override
     public void updateOrdersInFile(String orderDate) throws FlooringMasteryPersistenceException {
         dao.editOrdersInFile(orderDate);
+    }
+
+    @Override
+    public BigDecimal editAreaInputFromString(String inputArea) throws FlooringMasteryDataValidationException {
+        try{
+            return new BigDecimal(inputArea);
+        } catch (NumberFormatException e){
+            throw new FlooringMasteryDataValidationException(
+                    "Not a valid number."
+            );
+        }
     }
 
 
