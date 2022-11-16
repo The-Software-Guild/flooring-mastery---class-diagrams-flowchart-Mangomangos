@@ -47,6 +47,8 @@ public class FlooringMasteryView {
         return io.readInt("Please select a Product Type");
     }
 
+
+
     public ArrayList<String> printAllProducts(List<Product> productList){
         allProductsBanner();
         int j=1;
@@ -107,8 +109,8 @@ public class FlooringMasteryView {
         return io.readString("Enter state (" + editOrder.getState() + ")");
     }
 
-    public void editProductType (Order editOrder) {
-        io.print("What product type would you like? (" + editOrder.getProductType() + ")");
+    public String editProductType (Order editOrder) {
+        return io.readString("What product type would you like? (" + editOrder.getProductType() + ")");
     }
 
     public BigDecimal editArea (Order editOrder) {

@@ -2,6 +2,7 @@ package com.jwade.controller;
 
 import com.jwade.dao.FlooringMasteryDaoImpl;
 import com.jwade.dao.FlooringMasteryException;
+import com.jwade.dao.FlooringMasteryPersistenceException;
 import com.jwade.dto.Order;
 import com.jwade.dto.Product;
 import com.jwade.dto.Tax;
@@ -133,28 +134,44 @@ public class FlooringMasteryController {
 
     }
 
-    public void editOrder(){
+    public void editOrder() throws FlooringMasteryPersistenceException {
+        //display edit order banner
         view.editOrderBanner();
 
+        //user enter order information to grab order if exists
         String orderDate = view.getOrderDate();
         Integer orderNumber = view.getOrderNumber();
-
         Order currentOrder = service.getOrder(orderDate, orderNumber);
 
+        //User prompted to change name first
         String newName = view.editCustomerName(currentOrder);
         service.editOrderName(newName, currentOrder);
 
+        //User prompted to change name
         String newState = view.editCustomerState(currentOrder);
+        service.editState(newState, currentOrder);
 
-        view.editProductType(currentOrder);
-
+        //user prompted to change product type
+        String newProductType = view.editProductType(currentOrder);
         view.printAllProducts(service.listAllProducts());
+        service.editProduct(newProductType, currentOrder);
+
+        //user prompted to change area of floor
         BigDecimal newArea = view.editArea(currentOrder);
+        service.editArea(newArea, currentOrder);
+
+        currentOrder = service.editOrder(currentOrder);
+
+        String toEdit = view.confirmationSaveOrder(currentOrder);
+        if (toEdit.equalsIgnoreCase("y")){
+            service.updateOrdersInFile(orderDate);
+            view.orderAddedSuccessful();
+        }
 
     }
 
 
-    public void removeAnOrder(){
+    public void removeAnOrder() throws FlooringMasteryPersistenceException {
 
         String orderDate = view.getOrderDate();
         Integer orderNumber = view.getOrderNumber();
@@ -163,6 +180,7 @@ public class FlooringMasteryController {
         String toRemove = view.confirmationRemoveOrder(currentOrder);
         if (toRemove.equalsIgnoreCase("y")){
             service.removeOrder(orderDate, currentOrder);
+            service.updateOrdersInFile(orderDate);
             view.orderRemovedSuccessful();
         }
 
