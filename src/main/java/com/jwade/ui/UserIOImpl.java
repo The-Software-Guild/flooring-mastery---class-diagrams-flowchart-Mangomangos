@@ -34,7 +34,7 @@ public class UserIOImpl implements UserIO {
             } catch (NumberFormatException e) {
                 System.out.println("Invalid number.");
             }
-        } while (continues=true);
+        } while (continues);
         return  num;
     }
 
@@ -122,8 +122,16 @@ public class UserIOImpl implements UserIO {
 
     @Override
     public BigDecimal readBigDecimal(String prompt) {
-        System.out.println(prompt);
-        return new BigDecimal(sc.nextLine());
+        BigDecimal num;
+        do {
+            System.out.println(prompt);
+            try{
+                num = new BigDecimal(sc.nextLine());
+            } catch (NumberFormatException e){
+                num = BigDecimal.valueOf(-1);
+            }
+        } while (num.doubleValue() < 0);
+        return num;
     }
 
     @Override
