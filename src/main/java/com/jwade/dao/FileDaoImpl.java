@@ -20,6 +20,8 @@ public class FileDaoImpl implements FileDao{
 
     private  Map<Integer, Order> orders = new HashMap<>();
 
+    private String HEADER_TEXT = "OrderNumber,CustomerName,State,TaxRate,ProductType,Area,CostPerSquareFoot,LaborCostPerSquareFoot,MaterialCost,LaborCost,Tax,Total";
+
     @Override
     public Order unmarshallOrder(String line) {
 
@@ -56,16 +58,25 @@ public class FileDaoImpl implements FileDao{
     @Override
     public void addNewOrderToFile(String orderDate, Order order) {
 
-        String fileName = "orders_" + orderDate + ".txt";
-
         PrintWriter out = null;
 
-        File orderFile = new File("Orders/" + fileName);
+        File orderFile = new File("Orders/orders_" + orderDate + ".txt");
 
-        try {
-            orderFile.createNewFile();
-            out = new PrintWriter( new FileWriter(fileName));
-        } catch (IOException e) {
+        if (orderFile.isFile()){
+            try {
+                out = new PrintWriter( new FileWriter(orderFile));
+            } catch (IOException e){
+            }
+
+        } else {
+            try {
+                orderFile.createNewFile();
+                out = new PrintWriter(new FileWriter(orderFile));
+            } catch (IOException e){
+
+            }
+            out.println(HEADER_TEXT);
+
         }
 
         String oderAsText = marshallOrder(order);
@@ -76,31 +87,20 @@ public class FileDaoImpl implements FileDao{
     }
 
     @Override
-    public void updateOrderInFile(Order newOrder, String orderDate) {
+    public void updateOrderInFile(ArrayList<Order> orders, String orderDate) {
 
         PrintWriter out = null;
 
         String fileName = "Orders/orders_" + orderDate + ".txt";
 
-        Map<Integer, Order> dayOrders = readFiles(fileName);
-
-        Order oldOrder = dayOrders.get(newOrder.getOrderNumber());
-
-        dayOrders.replace(oldOrder.getOrderNumber(), oldOrder, newOrder);
-
-        File orderFile = new File(fileName);
-
-        orderFile.delete();
-
         try {
-            orderFile.createNewFile();
             out = new PrintWriter( new FileWriter(fileName));
-        } catch (IOException e){
+        } catch (IOException e) {
 
         }
 
         String orderAsText;
-        for (Order currentOrder : new ArrayList<>(dayOrders.values())){
+        for (Order currentOrder: orders){
             orderAsText = marshallOrder(currentOrder);
             out.println(orderAsText);
             out.flush();
@@ -112,41 +112,8 @@ public class FileDaoImpl implements FileDao{
     @Override
     public Boolean doesFileExist(String orderDate) {
         File f = new File("Orders/orders_" + orderDate + ".txt");
-        return f.exists();
+        return f.isFile();
     }
-
-    @Override
-    public void updateRemovedOrderInFile(String orderDate, Order removedOrder) {
-
-        PrintWriter out = null;
-
-        String fileName = "Orders/orders_" + orderDate + ".txt";
-
-        Map<Integer, Order> dayOrders = readFiles(fileName);
-
-        dayOrders.remove(removedOrder.getOrderNumber());
-
-        File orderFile = new File(fileName);
-
-        orderFile.delete();
-
-        try {
-            orderFile.createNewFile();
-            out = new PrintWriter( new FileWriter(fileName));
-        } catch (IOException e){
-
-        }
-
-        String orderAsText;
-        for (Order currentOrder : new ArrayList<>(dayOrders.values())){
-            orderAsText = marshallOrder(currentOrder);
-            out.println(orderAsText);
-            out.flush();
-        }
-        out.close();
-
-    }
-
 
 
     @Override
@@ -168,6 +135,12 @@ public class FileDaoImpl implements FileDao{
         String currentLine;
         Order currentOrder;
 
+        //skip header text
+        if(scanner.hasNextLine()){
+            scanner.nextLine();
+        }
+
+        //read rest of file
         while (scanner.hasNextLine()) {
             currentLine = scanner.nextLine();
             currentOrder = unmarshallOrder(currentLine);

@@ -3,6 +3,7 @@ package com.jwade.dao;
 import com.jwade.dto.Order;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -20,9 +21,7 @@ public interface FileDao {
 
     public Map<Integer, Order> readFile(String file);
 
-    void updateRemovedOrderInFile (String orderDate, Order removedOrder);
-
-    void updateOrderInFile(Order newOrder, String orderDate);
+    void updateOrderInFile(ArrayList<Order> orders, String orderDate);
 
     Boolean doesFileExist(String orderDate);
 
