@@ -9,6 +9,8 @@ public class FlooringMasteryDaoImpl implements FlooringMasteryDao {
 
     private Map<Integer, Order> orderMap = new HashMap<>();
 
+    private Map<Integer, Order> orders = new HashMap<>();
+
     private FileDao fileDao = new FileDaoImpl();
     private String FILE_PATH;
 
@@ -46,86 +48,95 @@ public class FlooringMasteryDaoImpl implements FlooringMasteryDao {
 
     @Override
     public Order removeOrder(String orderDate, Order order) {
-        return null;
+        orders.remove(order.getOrderNumber());
+        return order;
     }
 
     @Override
-    public Order editOrder(Order order, String orderDate) {
-        Order updatedOrder = orderMap.put(order.getOrderNumber(), order);
-        fileDao.updateOrderInFile(updatedOrder, orderDate);
-        return updatedOrder;
+    public void editOrdersInFile(String orderDate) {
+        fileDao.updateOrderInFile(new ArrayList<>(orders.values()), orderDate);
     }
 
     @Override
     public List<Order> listDayOrders(String orderDate) {
-        Map<Integer, Order> orderDayMap;
-        orderDayMap = fileDao.readFile("Orders/orders_" + orderDate + "txt");
-        return new ArrayList<>(orderDayMap.values());
+        orders = fileDao.readFile("Orders/orders_" + orderDate + "txt");
+        return new ArrayList<>(orders.values());
     }
 
     @Override
     public String updateCustomerName(Order order, String newName) {
         order.setCustomerName(newName);
+        orders.put(order.getOrderNumber(), order);
         return newName;
     }
 
     @Override
     public String updateCustomerState(Order order, String newState) {
         order.setState(newState);
+        orders.put(order.getOrderNumber(), order);
         return newState;
     }
 
     @Override
     public BigDecimal updateTaxRate(Order order, BigDecimal newTaxRate) {
         order.setTax(newTaxRate);
+        orders.put(order.getOrderNumber(), order);
         return newTaxRate;
     }
 
     @Override
     public String updateProductType(Order order, String newProduct) {
         order.setProductType(newProduct);
+        orders.put(order.getOrderNumber(), order);
         return newProduct;
     }
 
     @Override
     public BigDecimal updateArea(Order order, BigDecimal newArea) {
         order.setArea(newArea);
+        orders.put(order.getOrderNumber(), order);
         return newArea;
     }
 
     @Override
     public BigDecimal updateCostPerSquareFoot(Order order, BigDecimal newCost) {
         order.setCostPerSquareFoot(newCost);
+        orders.put(order.getOrderNumber(), order);
         return newCost;
     }
 
     @Override
     public BigDecimal updateLaborCostPerSquareFoot(Order order, BigDecimal newLaborCost) {
         order.setLaborCostPerSquareFoot(newLaborCost);
+        orders.put(order.getOrderNumber(), order);
         return newLaborCost;
     }
 
     @Override
     public BigDecimal updateMaterialCost(Order order, BigDecimal newMaterialCost) {
         order.setMaterialCost(newMaterialCost);
+        orders.put(order.getOrderNumber(), order);
         return newMaterialCost;
     }
 
     @Override
     public BigDecimal updateLaborCost(Order order, BigDecimal newLaborCost) {
         order.setLaborCost(newLaborCost);
+        orders.put(order.getOrderNumber(), order);
         return newLaborCost;
     }
 
     @Override
     public BigDecimal updateTax(Order order, BigDecimal newTax) {
         order.setTax(newTax);
+        orders.put(order.getOrderNumber(), order);
         return newTax;
     }
 
     @Override
     public BigDecimal updateTotal(Order order, BigDecimal newTotal) {
         order.setTotal(newTotal);
+        orders.put(order.getOrderNumber(), order);
         return newTotal;
     }
 

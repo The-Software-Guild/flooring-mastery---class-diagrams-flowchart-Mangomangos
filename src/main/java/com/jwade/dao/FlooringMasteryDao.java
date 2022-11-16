@@ -15,8 +15,7 @@ public interface FlooringMasteryDao {
 
     Order removeOrder(String orderDate, Order order);
 
-    Order editOrder(Order order, String orderDate);
-
+    void editOrdersInFile(String orderDate);
     List<Order> listDayOrders(String orderDate);
 
     String updateCustomerName(Order order, String newName);
