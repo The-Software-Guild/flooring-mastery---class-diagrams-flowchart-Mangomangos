@@ -44,7 +44,7 @@ public interface FlooringMasteryService {
 
     String editState (String state, Order currentOrder);
 
-    String editProduct (String product, Order currentOrder);
+    Product editProduct (String inputProduct, Order currentOrder);
 
     BigDecimal editArea (BigDecimal area, Order currentOrder);
 
@@ -62,6 +62,8 @@ public interface FlooringMasteryService {
     BigDecimal calculateTax (BigDecimal materialCost, BigDecimal laborCost, BigDecimal taxRate);
 
     BigDecimal calculateTotal(BigDecimal materialCost, BigDecimal laborCost, BigDecimal tax);
+
+    void updateOrdersInFile(String orderDate);
 
 
 

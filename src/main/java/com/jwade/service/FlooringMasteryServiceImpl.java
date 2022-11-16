@@ -11,7 +11,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class FlooringMasteryServiceImpl implements FlooringMasteryService{
 
@@ -136,8 +135,14 @@ public class FlooringMasteryServiceImpl implements FlooringMasteryService{
     }
 
     @Override
-    public String editProduct(String product, Order currentOrder) {
-        return null;
+    public Product editProduct(String inputProduct, Order currentOrder) {
+
+        Product requestedProduct = productDao.getProduct(inputProduct);
+
+        if (requestedProduct.getCostPerSquareFoot() !=null){
+            return requestedProduct;
+        }
+        return(productDao.getProduct(currentOrder.getProductType()));
     }
 
     @Override
@@ -153,7 +158,9 @@ public class FlooringMasteryServiceImpl implements FlooringMasteryService{
     @Override
     public Order editOrder(String orderDate, Order currentOrder) {
         Tax orderTaxInfo = taxDao.getTax(currentOrder.getState());
+
         Product orderProductInfo = productDao.getProduct(currentOrder.getProductType());
+        dao.updateProductType(currentOrder, orderProductInfo.getProductType());
 
         BigDecimal area = currentOrder.getArea();
         BigDecimal newTaxRate = dao.updateTaxRate(currentOrder, orderTaxInfo.getTaxRate());
@@ -171,7 +178,7 @@ public class FlooringMasteryServiceImpl implements FlooringMasteryService{
 
         BigDecimal newTotal = calculateTotal(newMaterialCost, newLaborCost, newTaxCost);
         dao.updateTotal(currentOrder, newTotal);
-        return  dao.editOrder(currentOrder, orderDate);
+        return  currentOrder;
     }
 
     @Override
@@ -206,9 +213,16 @@ public class FlooringMasteryServiceImpl implements FlooringMasteryService{
         return materialCost.add(laborCost).add(tax);
     }
 
+    @Override
+    public void updateOrdersInFile(String orderDate) {
+        dao.editOrdersInFile(orderDate);
+    }
+
 
     @Override
     public Order removeOrder(String orderDate, Order removedOrder) {
         return dao.removeOrder(orderDate, removedOrder);
     }
+
+
 }
