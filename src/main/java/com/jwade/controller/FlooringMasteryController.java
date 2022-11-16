@@ -56,14 +56,23 @@ public class FlooringMasteryController {
         }
     }
 
+    public void listOrders(){
+        view.allOrdersBanner();
+        String orderDate = view.getOrderDate();
+        List<Order> orders = service.listAllOrdersForDay(orderDate);
+        view.printAllOrders(orders);
+    }
+
     public void addOrder(){
+
+        // check if date is valid then save as order date field
         Boolean validDate = false;
         String orderDate = "";
         while(!validDate){
             orderDate = view.getOrderDate();
             validDate = service.validateOrderDate(orderDate);
         }
-
+        // check if name is valid then save as name field
         Boolean validName = false;
         String orderName = "";
         while (!validName){
@@ -71,6 +80,7 @@ public class FlooringMasteryController {
             validName = service.validateCustomerName(orderName);
         }
 
+        //check if state is a valid state in taxFile then save as state abbreviation field
         Boolean validState = false;
         String stateAbbreviation = "";
         Tax chosenState = null;
@@ -83,8 +93,10 @@ public class FlooringMasteryController {
             }
         }
 
+        // use previous selected state to generate the tax rate
         BigDecimal taxRate = service.generateTaxRate(chosenState);
 
+        //Show all the products available and save selected as chosen product type
         view.allProductsBanner();
         List<Product> productList = service.listAllProducts();
         view.printAllProducts(productList);
@@ -92,6 +104,7 @@ public class FlooringMasteryController {
         Product chosenProduct = productList.get(selection-1);
         String productType = service.setCustomerProduct(chosenProduct);
 
+        // check if area is >= 100 and set as area field
         Boolean validArea = false;
         BigDecimal area = null;
         while (!validArea){
@@ -99,6 +112,7 @@ public class FlooringMasteryController {
             validArea = service.validateFloorArea(area);
         }
 
+        // finished with validating -- setting the other calculated fields of the order
         BigDecimal costPerSquareFoot = service.setCostPerSquareFoot(chosenProduct);
         BigDecimal laborCostPerSquareFoot = service.setLaborCostPerSquareFoot(chosenProduct);
         BigDecimal materialCost = service.calculateMaterialCost(area,chosenProduct);
@@ -106,11 +120,11 @@ public class FlooringMasteryController {
         BigDecimal tax = service.calculateTax(materialCost, laborCost, taxRate);
         BigDecimal total = service.calculateTotal(materialCost, laborCost, tax);
 
-
-
+        // Holding the current order without saving to show to user before saving the order
         Order currentOrder = service.createOrder(orderDate, orderName, stateAbbreviation, productType, taxRate, area, costPerSquareFoot,
                 laborCostPerSquareFoot, materialCost, laborCost, tax, total);
 
+        //Asking user if they want to save and only saving to file if user hits y
         String toSave = view.confirmationSaveOrder(currentOrder);
         if (toSave.equalsIgnoreCase("y")){
             service.addOrder(orderDate, currentOrder);
@@ -119,54 +133,39 @@ public class FlooringMasteryController {
 
     }
 
-    public void listOrders(){
-        view.allOrdersBanner();
-    }
-
     public void editOrder(){
         view.editOrderBanner();
+
         String orderDate = view.getOrderDate();
         Integer orderNumber = view.getOrderNumber();
+
         Order currentOrder = service.getOrder(orderDate, orderNumber);
+
         String newName = view.editCustomerName(currentOrder);
+        service.editOrderName(newName, currentOrder);
+
         String newState = view.editCustomerState(currentOrder);
+
         view.editProductType(currentOrder);
+
         view.printAllProducts(service.listAllProducts());
         BigDecimal newArea = view.editArea(currentOrder);
 
     }
 
-    private void editArea(Order currentOrder) {
-        BigDecimal area = view.getOrderArea();
-        service.validateFloorArea(area);
-        view.confirmationSaveOrder(currentOrder);
-        view.editOrderSuccessful();
-    }
-
-    private void editProductType(Order currentOrder) {
-        view.confirmationSaveOrder(currentOrder);
-        view.editOrderSuccessful();
-    }
-
-    private void editState(Order currentOrder) {
-        String newState = view.getOrderState();
-        service.validateCustomerState(newState);
-        view.confirmationSaveOrder(currentOrder);
-        view.editOrderSuccessful();
-    }
-
-    private void editCustomerName(Order currentOrder) {
-        String newName = view.getOrderName();
-        view.confirmationSaveOrder(currentOrder);
-        view.editOrderSuccessful();
-    }
 
     public void removeAnOrder(){
+
         String orderDate = view.getOrderDate();
         Integer orderNumber = view.getOrderNumber();
         Order currentOrder = service.getOrder(orderDate, orderNumber);
-        view.confirmationRemoveOrder(currentOrder);
-        view.orderRemovedSuccessful();
+
+        String toRemove = view.confirmationRemoveOrder(currentOrder);
+        if (toRemove.equalsIgnoreCase("y")){
+            service.removeOrder(orderDate, currentOrder);
+            view.orderRemovedSuccessful();
+        }
+
     }
 
     public void exportData(){
