@@ -91,7 +91,7 @@ public class FlooringMasteryServiceImpl implements FlooringMasteryService{
             for (Character chr : characters){
                 if (c.equals(chr)){
                     throw new FlooringMasteryDataValidationException(
-                            "Invalid Name: Please only use letters (a-z), numbers (0-9), and charachers limited to '.' and ',' ");
+                            "Invalid Name: Please only use letters (a-z), numbers (0-9), and characters limited to '.' and ',' ");
                 }
             }
         }
@@ -107,7 +107,7 @@ public class FlooringMasteryServiceImpl implements FlooringMasteryService{
                return tax;
             }
         }
-        throw new FlooringMasteryDataValidationException("State is within tax file");
+        throw new FlooringMasteryDataValidationException("State is not within tax file");
     }
 
     @Override
