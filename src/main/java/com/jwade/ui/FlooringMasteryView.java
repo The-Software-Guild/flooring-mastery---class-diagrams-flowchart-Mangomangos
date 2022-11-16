@@ -113,8 +113,8 @@ public class FlooringMasteryView {
         return io.readString("What product type would you like? (" + editOrder.getProductType() + ")");
     }
 
-    public BigDecimal editArea (Order editOrder) {
-        return io.readBigDecimal("Enter an area (" + editOrder.getArea() + ")");
+    public String editArea (Order editOrder) {
+        return io.readString("Enter an area (" + editOrder.getArea() + ")");
     }
 
     public void displayErrorMessage(String message){
