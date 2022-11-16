@@ -140,6 +140,7 @@ public class FlooringMasteryServiceImpl implements FlooringMasteryService{
         Product requestedProduct = productDao.getProduct(inputProduct);
 
         if (requestedProduct.getCostPerSquareFoot() !=null){
+            dao.updateProductType(currentOrder, requestedProduct.getProductType());
             return requestedProduct;
         }
         return(productDao.getProduct(currentOrder.getProductType()));
@@ -160,7 +161,6 @@ public class FlooringMasteryServiceImpl implements FlooringMasteryService{
         Tax orderTaxInfo = taxDao.getTax(currentOrder.getState());
 
         Product orderProductInfo = productDao.getProduct(currentOrder.getProductType());
-        dao.updateProductType(currentOrder, orderProductInfo.getProductType());
 
         BigDecimal area = currentOrder.getArea();
         BigDecimal newTaxRate = dao.updateTaxRate(currentOrder, orderTaxInfo.getTaxRate());
