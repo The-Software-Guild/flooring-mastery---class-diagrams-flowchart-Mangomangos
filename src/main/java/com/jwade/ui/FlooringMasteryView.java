@@ -43,6 +43,10 @@ public class FlooringMasteryView {
         return  io.readString("Please select an operation.");
     }
 
+    public Integer getProductSelection(int min, int max){
+        return io.readInt("Please select a Product Type");
+    }
+
     public ArrayList<String> printAllProducts(List<Product> productList){
         allProductsBanner();
         int j=1;
@@ -95,7 +99,21 @@ public class FlooringMasteryView {
         return  io.readString("What is the state for billing?");
     }
 
+    public String editCustomerName(Order editOrder){
+        return io.readString("Enter customer name (" + editOrder.getCustomerName() + "):");
+    }
 
+    public String editCustomerState (Order editOrder){
+        return io.readString("Enter state (" + editOrder.getState() + ")");
+    }
+
+    public void editProductType (Order editOrder) {
+        io.print("What product type would you like? (" + editOrder.getProductType() + ")");
+    }
+
+    public BigDecimal editArea (Order editOrder) {
+        return io.readBigDecimal("Enter an area (" + editOrder.getArea() + ")");
+    }
 
     public void displayErrorMessage(String message){
         io.print(message + '\n');
