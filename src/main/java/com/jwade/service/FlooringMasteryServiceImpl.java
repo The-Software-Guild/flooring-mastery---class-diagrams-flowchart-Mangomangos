@@ -208,8 +208,7 @@ public class FlooringMasteryServiceImpl implements FlooringMasteryService{
 
 
     @Override
-    public Order removeOrder(String orderDate, Integer orderNumber) {
-        Order removedOrder = dao.getOrder(orderDate, orderNumber);
+    public Order removeOrder(String orderDate, Order removedOrder) {
         return dao.removeOrder(orderDate, removedOrder);
     }
 }

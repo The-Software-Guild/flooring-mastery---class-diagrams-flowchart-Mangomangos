@@ -17,7 +17,7 @@ public interface FlooringMasteryService {
 
     List<Product> listAllProducts();
 
-    Order removeOrder(String orderDate, Integer orderNumber);
+    Order removeOrder(String orderDate, Order removedOrder);
 
     Integer generateOrderNumber();
 
