@@ -32,16 +32,32 @@ public class FlooringMasteryController {
             String operation = view.getMenuSelection();
             switch (operation) {
                 case "1": // display order
-                    listOrders();
+                    try {
+                        listOrders();
+                    } catch (FlooringMasteryPersistenceException e) {
+                        view.displayErrorMessage(e.getMessage());
+                    }
                     break;
                 case "2": //add an order
-                    addOrder();
+                    try {
+                        addOrder();
+                    } catch (FlooringMasteryPersistenceException | FlooringMasteryDataValidationException e){
+                        view.displayErrorMessage(e.getMessage());
+                }
                     break;
                 case "3": //edit an order
-                    editOrder();
+                    try {
+                        editOrder();
+                    } catch (FlooringMasteryPersistenceException | FlooringMasteryDataValidationException e){
+                        view.displayErrorMessage(e.getMessage());
+                    }
                     break;
                 case "4": // remove an order
-                    removeAnOrder();
+                    try {
+                        removeAnOrder();
+                    } catch (FlooringMasteryPersistenceException e) {
+                        view.displayErrorMessage(e.getMessage());
+                    }
                     break;
                 case "5": // export all data
                     exportData();
