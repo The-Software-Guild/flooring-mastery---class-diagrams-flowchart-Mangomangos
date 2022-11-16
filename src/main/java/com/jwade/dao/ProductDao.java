@@ -9,7 +9,7 @@ public interface ProductDao {
 
     public Product unmarshallProduct(String line);
 
-    public Map<String, Product> readFile(String file);
+    public Map<String, Product> readFile(String file) throws FlooringMasteryPersistenceException;
 
     public List<Product> listOfProducts ();
 

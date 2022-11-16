@@ -15,7 +15,7 @@ public interface FileDao {
 
     void addNewOrderToFile(String orderDate, Order order) throws FlooringMasteryPersistenceException;
 
-    public Map<Integer, Order> readFiles(String file) throws FlooringMasteryPersistenceException;
+    public Map<Integer, Order> readAllFiles(String file) throws FlooringMasteryPersistenceException;
 
     public List<File> listFiles(String path);
 

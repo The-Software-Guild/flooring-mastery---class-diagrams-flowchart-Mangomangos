@@ -1,24 +1,22 @@
 package com.jwade.dao;
 
 import com.jwade.dto.Order;
-import com.sun.source.tree.TryTree;
 
 import java.io.*;
 import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class FileDaoImpl implements FileDao{
 
-    private String pathName = "Orders";
+    private String pathName = "src/main/Orders";
 
     private static final String DELIMITER = ",";
 
-    private  Map<Integer, Order> orders = new HashMap<>();
+    private  Map<Integer, Order> allOrders = new HashMap<>();
 
     private String HEADER_TEXT = "OrderNumber,CustomerName,State,TaxRate,ProductType,Area,CostPerSquareFoot,LaborCostPerSquareFoot,MaterialCost,LaborCost,Tax,Total";
 
@@ -60,7 +58,7 @@ public class FileDaoImpl implements FileDao{
 
         PrintWriter out;
 
-        File orderFile = new File("Orders/orders_" + orderDate + ".txt");
+        File orderFile = new File("src/main/Orders/orders_" + orderDate + ".txt");
 
         if (orderFile.isFile()){
             try {
@@ -91,7 +89,7 @@ public class FileDaoImpl implements FileDao{
 
         PrintWriter out;
 
-        String fileName = "Orders/orders_" + orderDate + ".txt";
+        String fileName = "src/main/Orders/orders_" + orderDate + ".txt";
 
         try {
             out = new PrintWriter( new FileWriter(fileName));
@@ -111,22 +109,22 @@ public class FileDaoImpl implements FileDao{
 
     @Override
     public Boolean doesFileExist(String orderDate) {
-        File f = new File("Orders/orders_" + orderDate + ".txt");
+        File f = new File("src/main/Orders/orders_" + orderDate + ".txt");
         return f.isFile();
     }
 
 
     @Override
-    public Map<Integer, Order> readFile(String orderDate) throws FlooringMasteryPersistenceException {
+    public Map<Integer, Order> readFile(String fileName) throws FlooringMasteryPersistenceException {
 
         Map<Integer, Order> dayOrders = new HashMap<>();
 
-        Scanner scanner = null;
+        Scanner scanner;
 
         try {
             scanner = new Scanner(
                     new BufferedReader(
-                            new FileReader("Orders/orders_" + orderDate + ".txt")
+                            new FileReader(fileName)
                     )
             );
         } catch (FileNotFoundException e) {
@@ -170,11 +168,11 @@ public class FileDaoImpl implements FileDao{
     }
 
     @Override
-    public Map<Integer, Order> readFiles(String path) throws FlooringMasteryPersistenceException {
+    public Map<Integer, Order> readAllFiles(String path) throws FlooringMasteryPersistenceException {
         for (File file : listFiles(pathName)) {
-            orders.putAll(readFile(file.getName()));
+            allOrders.putAll(readFile(file.getPath()));
         }
-        return orders;
+        return allOrders;
     }
 
 

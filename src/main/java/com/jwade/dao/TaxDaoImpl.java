@@ -12,10 +12,10 @@ public class TaxDaoImpl implements TaxDao{
 
     private Map<String, Tax> taxes = new HashMap<>();
 
-    private static final String TAX_FILE = "Taxes.txt";
+    private static final String TAX_FILE = "src/main/Data/Taxes.txt";
 
     private static final  String DELIMITER = ",";
-    public TaxDaoImpl (){
+    public TaxDaoImpl () throws FlooringMasteryPersistenceException {
         this.taxes = readFile(TAX_FILE);
 
     }
@@ -31,8 +31,8 @@ public class TaxDaoImpl implements TaxDao{
     }
 
     @Override
-    public Map<String, Tax> readFile(String file) {
-        Scanner scanner = null;
+    public Map<String, Tax> readFile(String file) throws FlooringMasteryPersistenceException {
+        Scanner scanner;
         
         try{
             scanner = new Scanner(
@@ -41,13 +41,18 @@ public class TaxDaoImpl implements TaxDao{
                     )
             );
             
-        } catch (FileNotFoundException e) {
+        } catch (FileNotFoundException e) { throw new FlooringMasteryPersistenceException(
+                "Could not load tax information from file.");
             
         }
         
         String currentLine;
         Tax currentTax;
-        
+
+        if(scanner.hasNextLine()){
+            scanner.nextLine();
+        }
+
         while (scanner.hasNextLine()) {
             currentLine = scanner.nextLine();
             currentTax = unmarshallTaxes(currentLine);

@@ -14,7 +14,7 @@ public class ProductDaoImpl implements ProductDao{
 
     private static final String DELIMITER = ",";
 
-    private static final String PRODUCT_FILE = "Products.txt";
+    private static final String PRODUCT_FILE = "src/main/Data/Products.txt";
     @Override
     public Product unmarshallProduct(String line) {
         String[] productTokens = line.split(DELIMITER);
@@ -27,9 +27,9 @@ public class ProductDaoImpl implements ProductDao{
     }
 
     @Override
-    public Map<String, Product> readFile(String file) {
+    public Map<String, Product> readFile(String file) throws FlooringMasteryPersistenceException {
         
-        Scanner scanner = null;
+        Scanner scanner;
 
         try {
             scanner = new Scanner(
@@ -37,11 +37,17 @@ public class ProductDaoImpl implements ProductDao{
                             new FileReader(PRODUCT_FILE)
                     )
             );
-        } catch (FileNotFoundException e){
+        } catch (FileNotFoundException e){ throw new FlooringMasteryPersistenceException(
+                "Could not load product information from file."
+        );
         }
 
         String currentLine;
         Product currentProduct;
+
+        if(scanner.hasNextLine()){
+            scanner.nextLine();
+        }
 
         while (scanner.hasNextLine()) {
             currentLine = scanner.nextLine();

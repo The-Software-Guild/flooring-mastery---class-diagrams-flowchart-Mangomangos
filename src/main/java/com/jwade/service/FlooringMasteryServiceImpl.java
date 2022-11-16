@@ -63,15 +63,15 @@ public class FlooringMasteryServiceImpl implements FlooringMasteryService{
         try {
             chosenDate = LocalDate.parse(orderDate, DateTimeFormatter.ofPattern(pattern));
         } catch (DateTimeParseException e) {
-            throw new FlooringMasteryDataValidationException("Invalid date. Date must be in format DDMMYYYYY");
+            throw new FlooringMasteryDataValidationException("Invalid date. Date must be in format MMDDYYYYY");
         }
         LocalDate today = LocalDate.now();
         if (today.isBefore(chosenDate)){
-            throw new FlooringMasteryDataValidationException(
-                    "Invalid Date. Chosen date must be in the future!"
-            );
+            return true;
         }
-        return true;
+        throw new FlooringMasteryDataValidationException(
+                "Invalid Date. Chosen date must be in the future!"
+        );
     }
 
     @Override

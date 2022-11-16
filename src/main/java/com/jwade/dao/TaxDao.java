@@ -9,7 +9,7 @@ public interface TaxDao {
 
     public Tax unmarshallTaxes(String line);
 
-    public Map<String, Tax> readFile(String file);
+    public Map<String, Tax> readFile(String file) throws FlooringMasteryPersistenceException;
 
     public List<Tax> listOfTaxes();
 
