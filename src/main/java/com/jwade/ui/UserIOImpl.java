@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 public class UserIOImpl implements UserIO {
 
-    private Scanner sc;
+    private final Scanner sc;
 
     public UserIOImpl() {
         sc = new Scanner(System.in);
@@ -145,7 +145,7 @@ public class UserIOImpl implements UserIO {
             } catch (NumberFormatException e) {
                 num = BigDecimal.valueOf(-1);
             }
-        } while (num.doubleValue() < min.doubleValue() || num.doubleValue() > max.doubleValue() || num==null);
+        } while (num.doubleValue() < min.doubleValue() || num.doubleValue() > max.doubleValue());
 
         return num;
     }
