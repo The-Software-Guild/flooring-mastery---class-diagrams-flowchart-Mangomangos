@@ -13,15 +13,15 @@ public interface FileDao {
 
     public String marshallOrder(Order order);
 
-    void addNewOrderToFile(String orderDate, Order order);
+    void addNewOrderToFile(String orderDate, Order order) throws FlooringMasteryPersistenceException;
 
-    public Map<Integer, Order> readFiles(String file);
+    public Map<Integer, Order> readFiles(String file) throws FlooringMasteryPersistenceException;
 
     public List<File> listFiles(String path);
 
-    public Map<Integer, Order> readFile(String file);
+    public Map<Integer, Order> readFile(String file) throws FlooringMasteryPersistenceException;
 
-    void updateOrderInFile(ArrayList<Order> orders, String orderDate);
+    void updateOrderInFile(ArrayList<Order> orders, String orderDate) throws FlooringMasteryPersistenceException;
 
     Boolean doesFileExist(String orderDate);
 

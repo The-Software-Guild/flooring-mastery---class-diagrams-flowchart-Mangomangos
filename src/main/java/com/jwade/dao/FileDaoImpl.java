@@ -56,23 +56,23 @@ public class FileDaoImpl implements FileDao{
     }
 
     @Override
-    public void addNewOrderToFile(String orderDate, Order order) {
+    public void addNewOrderToFile(String orderDate, Order order) throws FlooringMasteryPersistenceException {
 
-        PrintWriter out = null;
+        PrintWriter out;
 
         File orderFile = new File("Orders/orders_" + orderDate + ".txt");
 
         if (orderFile.isFile()){
             try {
                 out = new PrintWriter( new FileWriter(orderFile));
-            } catch (IOException e){
+            } catch (IOException e){ throw new FlooringMasteryPersistenceException( "Could not save order to file.");
             }
 
         } else {
             try {
                 orderFile.createNewFile();
                 out = new PrintWriter(new FileWriter(orderFile));
-            } catch (IOException e){
+            } catch (IOException e){ throw new FlooringMasteryPersistenceException("Could not save order to file.");
 
             }
             out.println(HEADER_TEXT);
@@ -87,16 +87,16 @@ public class FileDaoImpl implements FileDao{
     }
 
     @Override
-    public void updateOrderInFile(ArrayList<Order> orders, String orderDate) {
+    public void updateOrderInFile(ArrayList<Order> orders, String orderDate) throws FlooringMasteryPersistenceException{
 
-        PrintWriter out = null;
+        PrintWriter out;
 
         String fileName = "Orders/orders_" + orderDate + ".txt";
 
         try {
             out = new PrintWriter( new FileWriter(fileName));
         } catch (IOException e) {
-
+            throw new FlooringMasteryPersistenceException(" Could not save order information");
         }
 
         String orderAsText;
@@ -117,7 +117,7 @@ public class FileDaoImpl implements FileDao{
 
 
     @Override
-    public Map<Integer, Order> readFile(String orderDate) {
+    public Map<Integer, Order> readFile(String orderDate) throws FlooringMasteryPersistenceException {
 
         Map<Integer, Order> dayOrders = new HashMap<>();
 
@@ -130,6 +130,7 @@ public class FileDaoImpl implements FileDao{
                     )
             );
         } catch (FileNotFoundException e) {
+            throw new FlooringMasteryPersistenceException( "Could not load order information from file");
         }
 
         String currentLine;
@@ -169,7 +170,7 @@ public class FileDaoImpl implements FileDao{
     }
 
     @Override
-    public Map<Integer, Order> readFiles(String path) {
+    public Map<Integer, Order> readFiles(String path) throws FlooringMasteryPersistenceException {
         for (File file : listFiles(pathName)) {
             orders.putAll(readFile(file.getName()));
         }

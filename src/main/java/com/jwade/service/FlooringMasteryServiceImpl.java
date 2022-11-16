@@ -1,6 +1,7 @@
 package com.jwade.service;
 
 import com.jwade.dao.FlooringMasteryDaoImpl;
+import com.jwade.dao.FlooringMasteryPersistenceException;
 import com.jwade.dao.ProductDaoImpl;
 import com.jwade.dao.TaxDaoImpl;
 import com.jwade.dto.Order;
@@ -9,8 +10,14 @@ import com.jwade.dto.Tax;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.DateTimeException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class FlooringMasteryServiceImpl implements FlooringMasteryService{
 
@@ -30,7 +37,7 @@ public class FlooringMasteryServiceImpl implements FlooringMasteryService{
 
 
     @Override
-    public Order getOrder(String orderDate, Integer orderNumber) {
+    public Order getOrder(String orderDate, Integer orderNumber) throws FlooringMasteryPersistenceException {
         return dao.getOrder(orderDate, orderNumber);
     }
 
@@ -40,7 +47,7 @@ public class FlooringMasteryServiceImpl implements FlooringMasteryService{
     }
 
     @Override
-    public List<Order> listAllOrdersForDay(String orderDate) {
+    public List<Order> listAllOrdersForDay(String orderDate) throws FlooringMasteryPersistenceException {
         return new ArrayList<>(dao.listDayOrders(orderDate));
     }
 
@@ -50,8 +57,21 @@ public class FlooringMasteryServiceImpl implements FlooringMasteryService{
     }
 
     @Override
-    public Boolean validateOrderDate(String orderDate) {
-        return null;
+    public Boolean validateOrderDate(String orderDate) throws FlooringMasteryDataValidationException {
+        String pattern = "MMddyyyy";
+        LocalDate chosenDate;
+        try {
+            chosenDate = LocalDate.parse(orderDate, DateTimeFormatter.ofPattern(pattern));
+        } catch (DateTimeParseException e) {
+            throw new FlooringMasteryDataValidationException("Invalid date. Date must be in format DDMMYYYYY");
+        }
+        LocalDate today = LocalDate.now();
+        if (today.isBefore(chosenDate)){
+            throw new FlooringMasteryDataValidationException(
+                    "Invalid Date. Chosen date must be in the future!"
+            );
+        }
+        return true;
     }
 
     @Override
@@ -60,12 +80,26 @@ public class FlooringMasteryServiceImpl implements FlooringMasteryService{
     }
 
     @Override
-    public Boolean validateCustomerName(String inputName) {
-        return null;
+    public Boolean validateCustomerName(String inputName) throws FlooringMasteryDataValidationException{
+
+
+        List<Character> characters = new ArrayList<>();
+        Collections.addAll(characters, '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '+', '_', '=',
+                '`', '[', ']', '"', ':', ';', '<', '>', '/', '{', '}', '|', '~' );
+
+        for (Character c : inputName.toCharArray()){
+            for (Character chr : characters){
+                if (c.equals(chr)){
+                    throw new FlooringMasteryDataValidationException(
+                            "Invalid Name: Please only use letters (a-z), numbers (0-9), and charachers limited to '.' and ',' ");
+                }
+            }
+        }
+        return true;
     }
 
     @Override
-    public Tax validateCustomerState(String inputState) {
+    public Tax validateCustomerState(String inputState) throws FlooringMasteryDataValidationException {
         List<Tax> listOfTaxRates = taxDao.listOfTaxes();
         for (Tax tax : listOfTaxRates){
             if (tax.getStateAbbreviation().equalsIgnoreCase(inputState) ||
@@ -73,7 +107,7 @@ public class FlooringMasteryServiceImpl implements FlooringMasteryService{
                return tax;
             }
         }
-        return null;
+        throw new FlooringMasteryDataValidationException("State is within tax file");
     }
 
     @Override
@@ -108,13 +142,13 @@ public class FlooringMasteryServiceImpl implements FlooringMasteryService{
     }
 
     @Override
-    public void addOrder(String orderDate, Order order) {
+    public void addOrder(String orderDate, Order order) throws FlooringMasteryPersistenceException {
         dao.addOrder(orderDate, order);
 
     }
 
     @Override
-    public String editOrderName(String newName, Order currentOrder) {
+    public String editOrderName(String newName, Order currentOrder) throws FlooringMasteryDataValidationException {
         if (!newName.isBlank()){
             if (validateCustomerName(newName)) {
                 dao.updateCustomerName(currentOrder, newName);
@@ -124,7 +158,7 @@ public class FlooringMasteryServiceImpl implements FlooringMasteryService{
     }
 
     @Override
-    public String editState(String state, Order currentOrder) {
+    public String editState(String state, Order currentOrder) throws FlooringMasteryDataValidationException {
         if (!state.isBlank()){
             Tax tax = validateCustomerState(state);
             if (tax != null){
@@ -157,7 +191,7 @@ public class FlooringMasteryServiceImpl implements FlooringMasteryService{
     }
 
     @Override
-    public Order editOrder(String orderDate, Order currentOrder) {
+    public Order editOrder(Order currentOrder) {
 
         //Grab necessary information to set the remaining calculating fields
         Tax orderTaxInfo = taxDao.getTax(currentOrder.getState());
@@ -217,7 +251,7 @@ public class FlooringMasteryServiceImpl implements FlooringMasteryService{
     }
 
     @Override
-    public void updateOrdersInFile(String orderDate) {
+    public void updateOrdersInFile(String orderDate) throws FlooringMasteryPersistenceException {
         dao.editOrdersInFile(orderDate);
     }
 

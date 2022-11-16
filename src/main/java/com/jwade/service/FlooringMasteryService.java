@@ -1,5 +1,6 @@
 package com.jwade.service;
 
+import com.jwade.dao.FlooringMasteryPersistenceException;
 import com.jwade.dto.Order;
 import com.jwade.dto.Product;
 import com.jwade.dto.Tax;
@@ -9,11 +10,11 @@ import java.util.List;
 
 public interface FlooringMasteryService {
 
-    Order getOrder(String orderDate, Integer orderNumber);
+    Order getOrder(String orderDate, Integer orderNumber) throws FlooringMasteryPersistenceException;
 
     List<Order> listAllOrders();
 
-    List<Order> listAllOrdersForDay(String orderDate);
+    List<Order> listAllOrdersForDay(String orderDate) throws FlooringMasteryPersistenceException;
 
     List<Product> listAllProducts();
 
@@ -21,9 +22,9 @@ public interface FlooringMasteryService {
 
     Integer generateOrderNumber();
 
-    Boolean validateCustomerName(String inputName);
+    Boolean validateCustomerName(String inputName) throws FlooringMasteryDataValidationException;
 
-    Tax validateCustomerState(String inputState);
+    Tax validateCustomerState(String inputState) throws FlooringMasteryDataValidationException;
 
     String setCustomerState (Tax taxObject);
 
@@ -33,22 +34,22 @@ public interface FlooringMasteryService {
 
     BigDecimal generateTaxRate(Tax taxObject);
 
-    Boolean validateOrderDate(String orderDate);
+    Boolean validateOrderDate(String orderDate) throws FlooringMasteryDataValidationException;
 
     Order createOrder (String orderDate, String customerName, String state, String product, BigDecimal taxRate, BigDecimal area,
                     BigDecimal costPerSquareFoot, BigDecimal laborCostPerSquareFoot, BigDecimal materialCost,
                     BigDecimal laborCost, BigDecimal tax, BigDecimal total);
-    void addOrder(String orderDate, Order order);
+    void addOrder(String orderDate, Order order) throws FlooringMasteryPersistenceException;
 
-    String editOrderName (String newName, Order currentOrder);
+    String editOrderName (String newName, Order currentOrder) throws FlooringMasteryDataValidationException;
 
-    String editState (String state, Order currentOrder);
+    String editState (String state, Order currentOrder) throws FlooringMasteryDataValidationException;
 
     Product editProduct (String inputProduct, Order currentOrder);
 
     BigDecimal editArea (BigDecimal area, Order currentOrder);
 
-    Order editOrder (String orderDate, Order currentOrder);
+    Order editOrder (Order currentOrder);
 
     BigDecimal setLaborCostPerSquareFoot (Product product);
 
@@ -63,7 +64,7 @@ public interface FlooringMasteryService {
 
     BigDecimal calculateTotal(BigDecimal materialCost, BigDecimal laborCost, BigDecimal tax);
 
-    void updateOrdersInFile(String orderDate);
+    void updateOrdersInFile(String orderDate) throws FlooringMasteryPersistenceException;
 
 
 

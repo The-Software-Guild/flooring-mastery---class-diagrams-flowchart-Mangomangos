@@ -14,16 +14,16 @@ public class FlooringMasteryDaoImpl implements FlooringMasteryDao {
     private FileDao fileDao = new FileDaoImpl();
     private String FILE_PATH;
 
-    public FlooringMasteryDaoImpl() {
+    public FlooringMasteryDaoImpl() throws FlooringMasteryPersistenceException {
         String FILE_PATH = "Orders/";
         orderMap = fileDao.readFiles(FILE_PATH);
 
     }
 
     @Override
-    public Order getOrder(String orderDate, Integer orderNumber) {
+    public Order getOrder(String orderDate, Integer orderNumber) throws FlooringMasteryPersistenceException {
         if (fileDao.doesFileExist(orderDate)){
-            Map<Integer, Order> orders = fileDao.readFile(orderDate);
+            listDayOrders(orderDate);
             if (orders.get(orderNumber) != null){
                 return orders.get(orderNumber);
             }
@@ -40,7 +40,7 @@ public class FlooringMasteryDaoImpl implements FlooringMasteryDao {
 
 
     @Override
-    public Order addOrder(String orderDate, Order order) {
+    public Order addOrder(String orderDate, Order order) throws FlooringMasteryPersistenceException {
         Order newOrder = orderMap.put(order.getOrderNumber(), order);
         fileDao.addNewOrderToFile(orderDate, newOrder);
         return newOrder;
@@ -53,12 +53,12 @@ public class FlooringMasteryDaoImpl implements FlooringMasteryDao {
     }
 
     @Override
-    public void editOrdersInFile(String orderDate) {
+    public void editOrdersInFile(String orderDate) throws FlooringMasteryPersistenceException {
         fileDao.updateOrderInFile(new ArrayList<>(orders.values()), orderDate);
     }
 
     @Override
-    public List<Order> listDayOrders(String orderDate) {
+    public List<Order> listDayOrders(String orderDate) throws FlooringMasteryPersistenceException {
         orders = fileDao.readFile("Orders/orders_" + orderDate + "txt");
         return new ArrayList<>(orders.values());
     }

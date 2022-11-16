@@ -6,6 +6,7 @@ import com.jwade.dao.FlooringMasteryPersistenceException;
 import com.jwade.dto.Order;
 import com.jwade.dto.Product;
 import com.jwade.dto.Tax;
+import com.jwade.service.FlooringMasteryDataValidationException;
 import com.jwade.service.FlooringMasteryService;
 import com.jwade.service.FlooringMasteryServiceImpl;
 import com.jwade.ui.FlooringMasteryView;
@@ -24,7 +25,7 @@ public class FlooringMasteryController {
         this.service = service;
     }
 
-    public void run (){
+    public void run () throws FlooringMasteryPersistenceException, FlooringMasteryDataValidationException {
         boolean start = true;
         while (start){
             view.printMenu();
@@ -57,14 +58,14 @@ public class FlooringMasteryController {
         }
     }
 
-    public void listOrders(){
+    public void listOrders() throws FlooringMasteryPersistenceException {
         view.allOrdersBanner();
         String orderDate = view.getOrderDate();
         List<Order> orders = service.listAllOrdersForDay(orderDate);
         view.printAllOrders(orders);
     }
 
-    public void addOrder(){
+    public void addOrder() throws FlooringMasteryDataValidationException, FlooringMasteryPersistenceException {
 
         // check if date is valid then save as order date field
         Boolean validDate = false;
@@ -134,7 +135,7 @@ public class FlooringMasteryController {
 
     }
 
-    public void editOrder() throws FlooringMasteryPersistenceException {
+    public void editOrder() throws FlooringMasteryPersistenceException, FlooringMasteryDataValidationException {
         //display edit order banner
         view.editOrderBanner();
 

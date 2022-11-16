@@ -7,16 +7,16 @@ import java.util.List;
 
 public interface FlooringMasteryDao {
 
-    Order getOrder(String orderDate, Integer orderNumber);
+    Order getOrder(String orderDate, Integer orderNumber) throws FlooringMasteryPersistenceException;
 
     List<Order> listAllOrders();
 
-    Order addOrder(String orderDate, Order order);
+    Order addOrder(String orderDate, Order order) throws FlooringMasteryPersistenceException;
 
     Order removeOrder(String orderDate, Order order);
 
-    void editOrdersInFile(String orderDate);
-    List<Order> listDayOrders(String orderDate);
+    void editOrdersInFile(String orderDate) throws FlooringMasteryPersistenceException;
+    List<Order> listDayOrders(String orderDate) throws FlooringMasteryPersistenceException;
 
     String updateCustomerName(Order order, String newName);
 

@@ -19,7 +19,11 @@ public class Order {
     private BigDecimal total;
 
 
-    public Order(){
+    public Order(String name, String state, String productType, BigDecimal area){
+        this.customerName = name;
+        this.state = state;
+        this.productType = productType;
+        this.area = area;
 
     }
 
