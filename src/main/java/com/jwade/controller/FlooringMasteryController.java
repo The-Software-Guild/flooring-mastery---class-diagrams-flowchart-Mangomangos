@@ -212,8 +212,8 @@ public class FlooringMasteryController {
 
 
         //user prompted to change product type
-        String newProductType = view.editProductType(currentOrder);
         view.printAllProducts(service.listAllProducts());
+        String newProductType = view.editProductType(currentOrder);
         if (!newProductType.isEmpty()){
             Product chosenProduct = null;
             boolean validProduct = false;
@@ -223,6 +223,7 @@ public class FlooringMasteryController {
                     validProduct =true;
                 }catch (FlooringMasteryDataValidationException e){
                     view.displayErrorMessage(e.getMessage());
+                    view.printAllProducts(service.listAllProducts());
                     newProductType = view.editProductType(currentOrder);
                 }
             }

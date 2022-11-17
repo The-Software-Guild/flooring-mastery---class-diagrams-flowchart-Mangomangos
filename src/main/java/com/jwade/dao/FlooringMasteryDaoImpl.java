@@ -45,15 +45,13 @@ public class FlooringMasteryDaoImpl implements FlooringMasteryDao {
     @Override
     public void removeOrderFromFiles(Map<Integer, Order> orders, String orderDate, Order order) throws FlooringMasteryPersistenceException {
         orders.remove(order.getOrderNumber());
-        String filepath = "src/main/Orders/orders_" + orderDate + ".txt";
-        fileDao.updateOrderInFile(new ArrayList<>(orders.values()), filepath);
+        fileDao.updateOrderInFile(new ArrayList<>(orders.values()), orderDate);
     }
 
     @Override
     public void editOrdersInFile(Map<Integer, Order> orders, String orderDate, Order order) throws FlooringMasteryPersistenceException {
         orders.put(order.getOrderNumber(), order);
-        String filepath = "src/main/Orders/orders_" + orderDate + ".txt";
-        fileDao.updateOrderInFile(new ArrayList<>(orders.values()), filepath);
+        fileDao.updateOrderInFile(new ArrayList<>(orders.values()), orderDate);
     }
 
     @Override
