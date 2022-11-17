@@ -178,6 +178,7 @@ public class FlooringMasteryController {
         
 
         //User prompted to change name first
+        assert currentOrder != null;
         String newName = view.editCustomerName(currentOrder);
         if (!newName.isEmpty()){
             boolean validName = false;

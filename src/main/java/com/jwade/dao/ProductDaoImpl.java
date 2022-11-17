@@ -15,6 +15,10 @@ public class ProductDaoImpl implements ProductDao{
     private static final String DELIMITER = ",";
 
     private static final String PRODUCT_FILE = "src/main/Data/Products.txt";
+
+    public ProductDaoImpl() throws FlooringMasteryPersistenceException {
+        this.products = readFile(PRODUCT_FILE);
+    }
     @Override
     public Product unmarshallProduct(String line) {
         String[] productTokens = line.split(DELIMITER);
