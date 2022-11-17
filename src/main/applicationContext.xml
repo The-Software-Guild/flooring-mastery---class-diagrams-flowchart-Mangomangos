@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.springframework.org/schema/mvc
+          http://www.springframework.org/schema/mvc/spring-mvc.xsd
+          http://www.springframework.org/schema/tx
+          http://www.springframework.org/schema/tx/spring-tx-4.1.xsd
+          http://www.springframework.org/schema/context
+          http://www.springframework.org/schema/context/spring-context.xsd
+          http://www.springframework.org/schema/aop
+          http://www.springframework.org/schema/aop/spring-aop-3.2.xsd">
+
+    <bean id="userIO" class="com.jwade.ui.UserIOImpl"/>
+
+    <bean id="view" class="com.jwade.ui.FlooringMasteryView">
+        <constructor-arg ref="userIO"/>
+    </bean>
+
+    <bean id="fileDao" class="com.jwade.dao.FileDaoImpl"/>
+
+    <bean id="dao" class="com.jwade.dao.FlooringMasteryDaoImpl">
+        <constructor-arg ref="fileDao"/>
+    </bean>
+
+    <bean id="productDao" class="com.jwade.dao.ProductDaoImpl"/>
+
+    <bean id="taxDao" class="com.jwade.dao.TaxDaoImpl"/>
+
+    <bean id="service" class="com.jwade.service.FlooringMasteryServiceImpl">
+        <constructor-arg ref="dao"/>
+        <constructor-arg ref="productDao"/>
+        <constructor-arg ref="taxDao"/>
+    </bean>
+
+    <bean id="controller" class="com.jwade.controller.FlooringMasteryController">
+        <constructor-arg ref="service"/>
+        <constructor-arg ref="view"/>
+    </bean>
+
+
+</beans>
