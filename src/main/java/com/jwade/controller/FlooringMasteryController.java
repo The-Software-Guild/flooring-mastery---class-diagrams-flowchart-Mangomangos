@@ -1,18 +1,16 @@
 package com.jwade.controller;
 
-import com.jwade.dao.FlooringMasteryDaoImpl;
-import com.jwade.dao.FlooringMasteryException;
 import com.jwade.dao.FlooringMasteryPersistenceException;
 import com.jwade.dto.Order;
 import com.jwade.dto.Product;
 import com.jwade.dto.Tax;
 import com.jwade.service.FlooringMasteryDataValidationException;
-import com.jwade.service.FlooringMasteryService;
 import com.jwade.service.FlooringMasteryServiceImpl;
 import com.jwade.ui.FlooringMasteryView;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 public class FlooringMasteryController {
 
@@ -158,6 +156,7 @@ public class FlooringMasteryController {
 
     }
 
+
     public void editOrder() throws FlooringMasteryPersistenceException, FlooringMasteryDataValidationException {
         //display edit order banner
         view.editOrderBanner();
@@ -167,14 +166,16 @@ public class FlooringMasteryController {
         Integer orderNumber = view.getOrderNumber();
 
         Order currentOrder = null;
+        Map<Integer, Order> orders = null;
 
-        while (currentOrder == null){
-            try{
-                currentOrder = service.getOrder(orderDate, orderNumber);
-            } catch (FlooringMasteryPersistenceException e){
-                view.displayErrorMessage(e.getMessage());
-            }
+
+        try{
+            currentOrder = service.getOrder(orderDate, orderNumber);
+            orders = service.mapOrdersForDay(orderDate);
+        } catch (FlooringMasteryPersistenceException e){
+            view.displayErrorMessage(e.getMessage());
         }
+        
 
         //User prompted to change name first
         String newName = view.editCustomerName(currentOrder);
@@ -214,7 +215,20 @@ public class FlooringMasteryController {
         //user prompted to change product type
         String newProductType = view.editProductType(currentOrder);
         view.printAllProducts(service.listAllProducts());
-        service.editProduct(newProductType, currentOrder);
+        if (!newProductType.isEmpty()){
+            Product chosenProduct = null;
+            boolean validProduct = false;
+            while(!validProduct){
+                try{
+                    chosenProduct = service.validateNewProduct(newProductType, currentOrder);
+                    validProduct =true;
+                }catch (FlooringMasteryDataValidationException e){
+                    view.displayErrorMessage(e.getMessage());
+                }
+                newProductType = view.editProductType(currentOrder);
+            }
+            service.editProductType(chosenProduct, currentOrder);
+        }
 
         //user prompted to change area of floor
         String newArea = view.editArea(currentOrder);
@@ -238,12 +252,14 @@ public class FlooringMasteryController {
         //update the rest of the calculated fields
         currentOrder = service.editOrder(currentOrder);
 
+        //ask user if they would like to save this updated order -- otherwise changes will disappear
         String toEdit = view.confirmationSaveOrder(currentOrder);
         if (toEdit.equalsIgnoreCase("y")){
-            service.updateOrdersInFile(orderDate);
-            view.orderAddedSuccessful();
+            if (orders != null) {
+                service.addEditedOrderToFile(orders, orderDate, currentOrder);
+                view.orderAddedSuccessful();
+            }
         }
-
     }
 
 
@@ -251,15 +267,23 @@ public class FlooringMasteryController {
 
         String orderDate = view.getOrderDate();
         Integer orderNumber = view.getOrderNumber();
-        Order currentOrder = service.getOrder(orderDate, orderNumber);
 
-        String toRemove = view.confirmationRemoveOrder(currentOrder);
-        if (toRemove.equalsIgnoreCase("y")){
-            service.removeOrder(orderDate, currentOrder);
-            service.updateOrdersInFile(orderDate);
-            view.orderRemovedSuccessful();
+        Order removedOrder = null;
+        Map<Integer, Order> orders = null;
+
+        try{
+            removedOrder = service.getOrder(orderDate, orderNumber);
+            orders = service.mapOrdersForDay(orderDate);
+        } catch (FlooringMasteryPersistenceException e){
+            view.displayErrorMessage(e.getMessage());
         }
 
+        assert removedOrder != null;
+        String toRemove = view.confirmationRemoveOrder(removedOrder);
+        if (toRemove.equalsIgnoreCase("y")){
+            service.removeOrderFromFile(orders, orderDate, removedOrder);
+            view.orderRemovedSuccessful();
+        }
     }
 
     public void exportData(){

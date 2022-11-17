@@ -9,10 +9,7 @@ public class FlooringMasteryDaoImpl implements FlooringMasteryDao {
 
     private Map<Integer, Order> orderMap = new HashMap<>();
 
-    private Map<Integer, Order> orders = new HashMap<>();
-
     private FileDao fileDao = new FileDaoImpl();
-    private String FILE_PATH;
 
     public FlooringMasteryDaoImpl() throws FlooringMasteryPersistenceException {
         String FILE_PATH = "src/main/Orders";
@@ -22,8 +19,9 @@ public class FlooringMasteryDaoImpl implements FlooringMasteryDao {
 
     @Override
     public Order getOrder(String orderDate, Integer orderNumber) throws FlooringMasteryPersistenceException {
+        String filePath = "src/main/Orders/orders_" + orderDate + ".txt";
         if (fileDao.doesFileExist(orderDate)){
-            listDayOrders(orderDate);
+            Map<Integer, Order> orders = fileDao.readFile(filePath);
             if (orders.get(orderNumber) != null){
                 return orders.get(orderNumber);
             }
@@ -40,105 +38,97 @@ public class FlooringMasteryDaoImpl implements FlooringMasteryDao {
 
 
     @Override
-    public Order addOrder(String orderDate, Order order) throws FlooringMasteryPersistenceException {
-        Order newOrder = orderMap.put(order.getOrderNumber(), order);
-        fileDao.addNewOrderToFile(orderDate, newOrder);
-        return newOrder;
+    public void addOrderToFiles(String orderDate, Order order) throws FlooringMasteryPersistenceException {
+        fileDao.addNewOrderToFile(orderDate, order);
     }
 
     @Override
-    public Order removeOrder(String orderDate, Order order) {
+    public void removeOrderFromFiles(Map<Integer, Order> orders, String orderDate, Order order) throws FlooringMasteryPersistenceException {
         orders.remove(order.getOrderNumber());
-        return order;
-    }
-
-    @Override
-    public void editOrdersInFile(String orderDate) throws FlooringMasteryPersistenceException {
-        String filepath = ("src/main/Orders/orders_" + orderDate + ".txt");
+        String filepath = "src/main/Orders/orders_" + orderDate + ".txt";
         fileDao.updateOrderInFile(new ArrayList<>(orders.values()), filepath);
     }
 
     @Override
-    public List<Order> listDayOrders(String orderDate) throws FlooringMasteryPersistenceException {
+    public void editOrdersInFile(Map<Integer, Order> orders, String orderDate, Order order) throws FlooringMasteryPersistenceException {
+        orders.put(order.getOrderNumber(), order);
+        String filepath = "src/main/Orders/orders_" + orderDate + ".txt";
+        fileDao.updateOrderInFile(new ArrayList<>(orders.values()), filepath);
+    }
+
+    @Override
+    public Map<Integer, Order> mapDayOrders(String orderDate) throws FlooringMasteryPersistenceException {
         String filepath = ("src/main/Orders/orders_" + orderDate + ".txt");
-        orders = fileDao.readFile(filepath);
+        return fileDao.readFile(filepath);
+    }
+
+    public List<Order> orderList (Map<Integer, Order> orders){
         return new ArrayList<>(orders.values());
     }
 
     @Override
     public String updateCustomerName(Order order, String newName) {
         order.setCustomerName(newName);
-        orders.put(order.getOrderNumber(), order);
         return newName;
     }
 
     @Override
     public String updateCustomerState(Order order, String newState) {
         order.setState(newState);
-        orders.put(order.getOrderNumber(), order);
         return newState;
     }
 
     @Override
     public BigDecimal updateTaxRate(Order order, BigDecimal newTaxRate) {
         order.setTax(newTaxRate);
-        orders.put(order.getOrderNumber(), order);
         return newTaxRate;
     }
 
     @Override
     public String updateProductType(Order order, String newProduct) {
         order.setProductType(newProduct);
-        orders.put(order.getOrderNumber(), order);
         return newProduct;
     }
 
     @Override
     public BigDecimal updateArea(Order order, BigDecimal newArea) {
         order.setArea(newArea);
-        orders.put(order.getOrderNumber(), order);
         return newArea;
     }
 
     @Override
     public BigDecimal updateCostPerSquareFoot(Order order, BigDecimal newCost) {
         order.setCostPerSquareFoot(newCost);
-        orders.put(order.getOrderNumber(), order);
         return newCost;
     }
 
     @Override
     public BigDecimal updateLaborCostPerSquareFoot(Order order, BigDecimal newLaborCost) {
         order.setLaborCostPerSquareFoot(newLaborCost);
-        orders.put(order.getOrderNumber(), order);
         return newLaborCost;
     }
 
     @Override
     public BigDecimal updateMaterialCost(Order order, BigDecimal newMaterialCost) {
         order.setMaterialCost(newMaterialCost);
-        orders.put(order.getOrderNumber(), order);
         return newMaterialCost;
     }
 
     @Override
     public BigDecimal updateLaborCost(Order order, BigDecimal newLaborCost) {
         order.setLaborCost(newLaborCost);
-        orders.put(order.getOrderNumber(), order);
         return newLaborCost;
     }
 
     @Override
     public BigDecimal updateTax(Order order, BigDecimal newTax) {
         order.setTax(newTax);
-        orders.put(order.getOrderNumber(), order);
         return newTax;
     }
 
     @Override
     public BigDecimal updateTotal(Order order, BigDecimal newTotal) {
         order.setTotal(newTotal);
-        orders.put(order.getOrderNumber(), order);
         return newTotal;
     }
 

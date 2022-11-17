@@ -4,6 +4,7 @@ import com.jwade.dto.Order;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 public interface FlooringMasteryDao {
 
@@ -11,12 +12,13 @@ public interface FlooringMasteryDao {
 
     List<Order> listAllOrders();
 
-    Order addOrder(String orderDate, Order order) throws FlooringMasteryPersistenceException;
+    void addOrderToFiles(String orderDate, Order order) throws FlooringMasteryPersistenceException;
 
-    Order removeOrder(String orderDate, Order order);
+    void removeOrderFromFiles(Map<Integer, Order> orders, String orderDate, Order order) throws FlooringMasteryPersistenceException;
 
-    void editOrdersInFile(String orderDate) throws FlooringMasteryPersistenceException;
-    List<Order> listDayOrders(String orderDate) throws FlooringMasteryPersistenceException;
+    void editOrdersInFile(Map<Integer, Order> orders, String orderDate, Order order) throws FlooringMasteryPersistenceException;
+
+    Map<Integer, Order> mapDayOrders(String orderDate) throws FlooringMasteryPersistenceException;
 
     String updateCustomerName(Order order, String newName);
 
@@ -41,6 +43,7 @@ public interface FlooringMasteryDao {
     BigDecimal updateTotal(Order order, BigDecimal newTotal);
 
     Integer generateCurrentMaxOrderNumber(List<Order> listOfOrders);
+    List<Order> orderList (Map<Integer, Order> orders);
 
 
 }

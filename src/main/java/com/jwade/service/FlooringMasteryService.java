@@ -7,6 +7,7 @@ import com.jwade.dto.Tax;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 public interface FlooringMasteryService {
 
@@ -18,7 +19,7 @@ public interface FlooringMasteryService {
 
     List<Product> listAllProducts();
 
-    Order removeOrder(String orderDate, Order removedOrder);
+    void removeOrderFromFile(Map<Integer, Order> orders, String orderDate, Order removedOrder) throws FlooringMasteryPersistenceException;
 
     Integer generateOrderNumber();
 
@@ -45,7 +46,7 @@ public interface FlooringMasteryService {
 
     String editState (String state, Order currentOrder) throws FlooringMasteryDataValidationException;
 
-    Product editProduct (String inputProduct, Order currentOrder) throws FlooringMasteryDataValidationException;
+    Product validateNewProduct(String inputProduct, Order currentOrder) throws FlooringMasteryDataValidationException;
 
     BigDecimal editArea (BigDecimal area, Order currentOrder) throws FlooringMasteryDataValidationException;
 
@@ -64,9 +65,11 @@ public interface FlooringMasteryService {
 
     BigDecimal calculateTotal(BigDecimal materialCost, BigDecimal laborCost, BigDecimal tax);
 
-    void updateOrdersInFile(String orderDate) throws FlooringMasteryPersistenceException;
+    void addEditedOrderToFile(Map<Integer, Order> orders, String orderDate, Order order) throws FlooringMasteryPersistenceException;
 
     BigDecimal editAreaInputFromString(String area) throws FlooringMasteryDataValidationException;
+
+    void editProductType (Product chosenProduct, Order currentOrder);
 
 
 

@@ -10,14 +10,10 @@ import com.jwade.dto.Tax;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.regex.Pattern;
+import java.util.*;
 
 public class FlooringMasteryServiceImpl implements FlooringMasteryService{
 
@@ -48,7 +44,11 @@ public class FlooringMasteryServiceImpl implements FlooringMasteryService{
 
     @Override
     public List<Order> listAllOrdersForDay(String orderDate) throws FlooringMasteryPersistenceException {
-        return new ArrayList<>(dao.listDayOrders(orderDate));
+        return new ArrayList<>(mapOrdersForDay(orderDate).values());
+    }
+
+    public Map<Integer, Order> mapOrdersForDay(String oderDate) throws FlooringMasteryPersistenceException{
+        return new HashMap<>(dao.mapDayOrders(oderDate));
     }
 
     @Override
@@ -148,7 +148,7 @@ public class FlooringMasteryServiceImpl implements FlooringMasteryService{
 
     @Override
     public void addOrder(String orderDate, Order order) throws FlooringMasteryPersistenceException {
-        dao.addOrder(orderDate, order);
+        dao.addOrderToFiles(orderDate, order);
 
     }
 
@@ -164,7 +164,7 @@ public class FlooringMasteryServiceImpl implements FlooringMasteryService{
     }
 
     @Override
-    public Product editProduct(String inputProduct, Order currentOrder) throws FlooringMasteryDataValidationException {
+    public Product validateNewProduct(String inputProduct, Order currentOrder) throws FlooringMasteryDataValidationException {
 
         int productNumber;
         try{
@@ -183,8 +183,12 @@ public class FlooringMasteryServiceImpl implements FlooringMasteryService{
                     "Invalid Input: Chosen value not a product on list"
             );
         }
-        dao.updateProductType(currentOrder, requestedProduct.getProductType());
         return requestedProduct;
+    }
+
+    @Override
+    public void editProductType (Product chosenProduct, Order currentOrder){
+        dao.updateProductType(currentOrder, chosenProduct.getProductType());
     }
 
     @Override
@@ -253,8 +257,8 @@ public class FlooringMasteryServiceImpl implements FlooringMasteryService{
     }
 
     @Override
-    public void updateOrdersInFile(String orderDate) throws FlooringMasteryPersistenceException {
-        dao.editOrdersInFile(orderDate);
+    public void addEditedOrderToFile(Map<Integer,Order> listOfOrders, String orderDate, Order order) throws FlooringMasteryPersistenceException {
+        dao.editOrdersInFile(listOfOrders,orderDate, order);
     }
 
     @Override
@@ -270,8 +274,8 @@ public class FlooringMasteryServiceImpl implements FlooringMasteryService{
 
 
     @Override
-    public Order removeOrder(String orderDate, Order removedOrder) {
-        return dao.removeOrder(orderDate, removedOrder);
+    public void removeOrderFromFile(Map<Integer, Order> orders, String orderDate, Order removedOrder) throws FlooringMasteryPersistenceException {
+        dao.removeOrderFromFiles(orders, orderDate, removedOrder);
     }
 
 
