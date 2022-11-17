@@ -105,6 +105,8 @@ public class FileDaoImpl implements FileDao{
             throw new FlooringMasteryPersistenceException(" Could not save order information");
         }
 
+        out.println(HEADER_TEXT);
+
         String orderAsText;
         for (Order currentOrder: orders){
             orderAsText = marshallOrder(currentOrder);
@@ -181,6 +183,46 @@ public class FileDaoImpl implements FileDao{
             allOrders.putAll(readFile(file.getPath()));
         }
         return allOrders;
+    }
+
+
+    @Override
+    public void exportFiles() throws FlooringMasteryPersistenceException {
+        List<File> listOfFiles = listFiles(pathName);
+
+        PrintWriter out;
+
+        try {
+            out = new PrintWriter( new FileWriter("src/main/Backup/DataExport.txt"));
+        } catch (IOException e) {
+            throw new FlooringMasteryPersistenceException(" Could not save order information");
+        }
+
+        out.println(HEADER_TEXT + "Date of Order");
+
+
+        for (File file: listOfFiles){
+
+            String fileName = file.getPath();
+            fileName = fileName.replace("src/main/Orders/orders_", "");
+            fileName = fileName.replace(".txt", "");
+            var date = new StringBuilder(fileName).insert(fileName.length()-4, "-").toString();
+            date = new StringBuilder(fileName).insert(fileName.length()-7, "-").toString();
+
+
+            List<Order> orders = new ArrayList<>(readFile(fileName).values());
+
+
+            String orderAsText;
+            for (Order currentOrder: orders){
+                orderAsText = marshallOrder(currentOrder) + ", " + date;
+                out.println(orderAsText);
+                out.flush();
+            }
+
+        }
+
+        out.close();
     }
 
 

@@ -192,6 +192,11 @@ public class FlooringMasteryServiceImpl implements FlooringMasteryService{
     }
 
     @Override
+    public void exportAllOrders() throws FlooringMasteryPersistenceException {
+        dao.exportAllOrders();
+    }
+
+    @Override
     public BigDecimal editArea(BigDecimal area, Order currentOrder) {
         return dao.updateArea(currentOrder, area);
     }

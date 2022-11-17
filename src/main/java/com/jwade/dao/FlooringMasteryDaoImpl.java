@@ -140,6 +140,10 @@ public class FlooringMasteryDaoImpl implements FlooringMasteryDao {
 
     }
 
+    public void exportAllOrders() throws FlooringMasteryPersistenceException {
+        fileDao.exportFiles();
+    }
+
 
 }
 

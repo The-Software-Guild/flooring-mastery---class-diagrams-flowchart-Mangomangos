@@ -71,6 +71,9 @@ public interface FlooringMasteryService {
 
     void editProductType (Product chosenProduct, Order currentOrder);
 
+    public void exportAllOrders() throws FlooringMasteryPersistenceException;
+
+
 
 
 

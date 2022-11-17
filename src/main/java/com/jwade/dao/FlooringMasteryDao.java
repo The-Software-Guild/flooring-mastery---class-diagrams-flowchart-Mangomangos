@@ -45,5 +45,7 @@ public interface FlooringMasteryDao {
     Integer generateCurrentMaxOrderNumber(List<Order> listOfOrders);
     List<Order> orderList (Map<Integer, Order> orders);
 
+    public void exportAllOrders() throws FlooringMasteryPersistenceException;
+
 
 }

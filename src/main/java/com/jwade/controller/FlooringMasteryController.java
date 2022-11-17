@@ -296,7 +296,13 @@ public class FlooringMasteryController {
     }
 
     public void exportData(){
-        view.exportOrdersSuccessful();
+        try{
+            service.exportAllOrders();
+            view.exportOrdersSuccessful();
+        } catch (FlooringMasteryPersistenceException e){
+            view.displayErrorMessage(e.getMessage());
+        }
+
     }
 
 }

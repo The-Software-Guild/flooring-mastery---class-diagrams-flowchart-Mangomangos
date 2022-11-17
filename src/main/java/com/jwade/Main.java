@@ -9,7 +9,7 @@ import com.jwade.ui.UserIO;
 import com.jwade.ui.UserIOImpl;
 
 public class Main {
-    public static void main(String[] args) throws FlooringMasteryPersistenceException, FlooringMasteryDataValidationException {
+    public static void main(String[] args) throws FlooringMasteryPersistenceException {
         UserIO myIO = new UserIOImpl();
         ProductDaoImpl productDao = new ProductDaoImpl();
         TaxDaoImpl taxDao = new TaxDaoImpl();

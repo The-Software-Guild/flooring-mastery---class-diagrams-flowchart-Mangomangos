@@ -27,4 +27,6 @@ public interface FileDao {
 
     String generateFilePathName(String orderDate);
 
+    void exportFiles() throws FlooringMasteryPersistenceException;
+
 }
