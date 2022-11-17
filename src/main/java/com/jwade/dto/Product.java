@@ -20,7 +20,7 @@ public class Product {
 
     @Override
     public String toString() {
-        return productType + ", " + "$" + costPerSquareFoot + ", " + "$" + laborCostPerSquareFoot;
+        return productType + ", Material Cost: $" + costPerSquareFoot + "/sqFt, Labor Cost: $" + laborCostPerSquareFoot + "/sqFt";
     }
 
     public String getProductType() {

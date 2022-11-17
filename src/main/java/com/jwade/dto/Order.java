@@ -46,9 +46,11 @@ public class Order {
 
     @Override
     public String toString() {
-        return orderNumber + ", " + customerName + ", " + state + ", " + productType + ", " + taxRate +
-                ", " + area + ", $" + costPerSquareFoot + ", $" + laborCostPerSquareFoot + ", $" +
-                materialCost + ", $" + laborCost + ", $" + tax + ", $" + total;
+        return "Order Number: " + orderNumber + "\nName: " + customerName + "\nState: " + state + ", Tax Rate:" + taxRate +
+                "\nProduct Type: " + productType  + ", Area: " + area +
+                "/sqFt \nMaterial Cost: $" + costPerSquareFoot + "/sqFt, Total Material Cost: $" + materialCost +
+                "\nLabor Cost: $" + laborCostPerSquareFoot + "/sqFt, Total Labor Cost: $" + laborCost +
+                "\nTotal Tax: $" + tax + ", Grand Total: $" + total;
     }
 
     public int getOrderNumber() {
