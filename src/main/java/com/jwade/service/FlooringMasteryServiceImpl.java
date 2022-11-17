@@ -177,7 +177,7 @@ public class FlooringMasteryServiceImpl implements FlooringMasteryService{
 
         Product requestedProduct;
         try {
-            requestedProduct = listAllProducts().get(productNumber);
+            requestedProduct = listAllProducts().get(productNumber-1);
         } catch (IndexOutOfBoundsException e){
             throw new FlooringMasteryDataValidationException(
                     "Invalid Input: Chosen value not a product on list"
