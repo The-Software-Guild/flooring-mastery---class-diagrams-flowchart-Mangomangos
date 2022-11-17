@@ -85,7 +85,7 @@ public class FlooringMasteryServiceImpl implements FlooringMasteryService{
 
         List<Character> characters = new ArrayList<>();
         Collections.addAll(characters, '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '+', '_', '=',
-                '`', '[', ']', '"', ':', ';', '<', '>', '/', '{', '}', '|', '~' );
+                '`', '[', ']', '"', ':', ';', '<', '>', '/', '{', '}', '|', '~', '\'' );
 
         for (Character c : inputName.toCharArray()){
             for (Character chr : characters){
