@@ -23,7 +23,7 @@ public class FlooringMasteryController {
         this.service = service;
     }
 
-    public void run () throws FlooringMasteryPersistenceException, FlooringMasteryDataValidationException {
+    public void run () {
         boolean start = true;
         while (start){
             view.printMenu();
@@ -61,13 +61,12 @@ public class FlooringMasteryController {
     }
 
     public void listOrders() throws FlooringMasteryPersistenceException {
-        view.allOrdersBanner();
         String orderDate = view.getOrderDate();
         List<Order> orders = service.listAllOrdersForDay(orderDate);
         view.printAllOrders(orders);
     }
 
-    public void addOrder() throws FlooringMasteryDataValidationException, FlooringMasteryPersistenceException {
+    public void addOrder() {
 
         // check if date is valid then save as order date field
         boolean validDate = false;
@@ -112,7 +111,6 @@ public class FlooringMasteryController {
         BigDecimal taxRate = service.generateTaxRate(chosenState);
 
         //Show all the products available and save selected as chosen product type
-        view.allProductsBanner();
         List<Product> productList = service.listAllProducts();
         view.printAllProducts(productList);
         int selection = view.getProductSelection(1, productList.size());
@@ -157,7 +155,7 @@ public class FlooringMasteryController {
     }
 
 
-    public void editOrder() throws FlooringMasteryPersistenceException, FlooringMasteryDataValidationException {
+    public void editOrder() {
         //display edit order banner
         view.editOrderBanner();
 
@@ -174,6 +172,7 @@ public class FlooringMasteryController {
             orders = service.mapOrdersForDay(orderDate);
         } catch (FlooringMasteryPersistenceException e){
             view.displayErrorMessage(e.getMessage());
+            return;
         }
         
 
@@ -187,12 +186,11 @@ public class FlooringMasteryController {
                     validName = service.validateCustomerName(newName);
                 } catch (FlooringMasteryDataValidationException e){
                     view.displayErrorMessage(e.getMessage());
+                    newName = view.editCustomerName(currentOrder);
                 }
-                newName = view.editCustomerName(currentOrder);
             }
             service.editOrderName(newName, currentOrder);
         }
-
 
 
         //User prompted to change State Name
@@ -206,8 +204,8 @@ public class FlooringMasteryController {
                     validState = true;
                 } catch (FlooringMasteryDataValidationException e){
                     view.displayErrorMessage(e.getMessage());
+                    newState = view.editCustomerState(currentOrder);
                 }
-                newState = view.editCustomerState(currentOrder);
             }
             service.editState(chosenState.getStateAbbreviation(), currentOrder);
         }
@@ -225,8 +223,8 @@ public class FlooringMasteryController {
                     validProduct =true;
                 }catch (FlooringMasteryDataValidationException e){
                     view.displayErrorMessage(e.getMessage());
+                    newProductType = view.editProductType(currentOrder);
                 }
-                newProductType = view.editProductType(currentOrder);
             }
             service.editProductType(chosenProduct, currentOrder);
         }
@@ -243,8 +241,8 @@ public class FlooringMasteryController {
                     validArea = true;
                 } catch (FlooringMasteryDataValidationException e){
                     view.displayErrorMessage(e.getMessage());
+                    newArea = view.editArea(currentOrder);
                 }
-                newArea = view.editArea(currentOrder);
             }
             service.editArea(area, currentOrder);
 
@@ -257,14 +255,18 @@ public class FlooringMasteryController {
         String toEdit = view.confirmationSaveOrder(currentOrder);
         if (toEdit.equalsIgnoreCase("y")){
             if (orders != null) {
-                service.addEditedOrderToFile(orders, orderDate, currentOrder);
-                view.orderAddedSuccessful();
+                try {
+                    service.addEditedOrderToFile(orders, orderDate, currentOrder);
+                    view.orderAddedSuccessful();
+                } catch (FlooringMasteryPersistenceException e){
+                    view.displayErrorMessage(e.getMessage());
+                }
             }
         }
     }
 
 
-    public void removeAnOrder() throws FlooringMasteryPersistenceException {
+    public void removeAnOrder() {
 
         String orderDate = view.getOrderDate();
         Integer orderNumber = view.getOrderNumber();
@@ -277,13 +279,18 @@ public class FlooringMasteryController {
             orders = service.mapOrdersForDay(orderDate);
         } catch (FlooringMasteryPersistenceException e){
             view.displayErrorMessage(e.getMessage());
+            return;
         }
 
         assert removedOrder != null;
         String toRemove = view.confirmationRemoveOrder(removedOrder);
         if (toRemove.equalsIgnoreCase("y")){
-            service.removeOrderFromFile(orders, orderDate, removedOrder);
-            view.orderRemovedSuccessful();
+            try{
+                service.removeOrderFromFile(orders, orderDate, removedOrder);
+                view.orderRemovedSuccessful();
+            } catch (FlooringMasteryPersistenceException e){
+                view.displayErrorMessage(e.getMessage());
+            }
         }
     }
 
