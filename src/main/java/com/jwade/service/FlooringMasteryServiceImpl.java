@@ -238,24 +238,24 @@ public class FlooringMasteryServiceImpl implements FlooringMasteryService{
 
     @Override
     public BigDecimal calculateMaterialCost(BigDecimal area, Product product) {
-        return area.multiply(product.getCostPerSquareFoot());
+        return area.multiply(product.getCostPerSquareFoot()).setScale(2, RoundingMode.HALF_UP);
     }
 
     @Override
     public BigDecimal calculateLaborCost(BigDecimal area, Product product) {
-        return area.multiply(product.getLaborCostPerSquareFoot());
+        return area.multiply(product.getLaborCostPerSquareFoot()).setScale(2, RoundingMode.HALF_UP);
     }
 
     @Override
     public BigDecimal calculateTax(BigDecimal materialCost, BigDecimal laborCost, BigDecimal taxRate) {
        BigDecimal totalCosts = materialCost.add(laborCost);
-       BigDecimal taxPercentage = taxRate.divide(new BigDecimal(100), RoundingMode.HALF_UP);
-       return totalCosts.multiply(taxPercentage);
+       BigDecimal taxPercentage = taxRate.divide(new BigDecimal(100)).setScale(2, RoundingMode.HALF_UP);
+       return totalCosts.multiply(taxPercentage).setScale(2, RoundingMode.HALF_UP);
     }
 
     @Override
     public BigDecimal calculateTotal(BigDecimal materialCost, BigDecimal laborCost, BigDecimal tax) {
-        return materialCost.add(laborCost).add(tax);
+        return materialCost.add(laborCost).add(tax).setScale(2, RoundingMode.HALF_UP);
     }
 
     @Override
