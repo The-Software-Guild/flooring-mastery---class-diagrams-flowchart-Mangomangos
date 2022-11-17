@@ -5,6 +5,7 @@ import com.jwade.dto.Order;
 import com.jwade.dto.Product;
 import com.jwade.dto.Tax;
 import com.jwade.service.FlooringMasteryDataValidationException;
+import com.jwade.service.FlooringMasteryService;
 import com.jwade.service.FlooringMasteryServiceImpl;
 import com.jwade.ui.FlooringMasteryView;
 
@@ -16,9 +17,9 @@ public class FlooringMasteryController {
 
     private FlooringMasteryView view;
 
-    private FlooringMasteryServiceImpl service;
+    private FlooringMasteryService service;
 
-    public FlooringMasteryController(FlooringMasteryView view, FlooringMasteryServiceImpl service) {
+    public FlooringMasteryController(FlooringMasteryView view, FlooringMasteryService service) {
         this.view = view;
         this.service = service;
     }

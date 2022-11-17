@@ -1,9 +1,6 @@
 package com.jwade.service;
 
-import com.jwade.dao.FlooringMasteryDaoImpl;
-import com.jwade.dao.FlooringMasteryPersistenceException;
-import com.jwade.dao.ProductDaoImpl;
-import com.jwade.dao.TaxDaoImpl;
+import com.jwade.dao.*;
 import com.jwade.dto.Order;
 import com.jwade.dto.Product;
 import com.jwade.dto.Tax;
@@ -17,13 +14,13 @@ import java.util.*;
 
 public class FlooringMasteryServiceImpl implements FlooringMasteryService{
 
-    private ProductDaoImpl productDao;
-    private TaxDaoImpl taxDao;
-    private FlooringMasteryDaoImpl dao;
+    private ProductDao productDao;
+    private TaxDao taxDao;
+    private FlooringMasteryDao dao;
 
     private Integer maxOrderNumber;
 
-    public FlooringMasteryServiceImpl (ProductDaoImpl productDao, TaxDaoImpl taxDao, FlooringMasteryDaoImpl dao){
+    public FlooringMasteryServiceImpl (ProductDao productDao, TaxDao taxDao, FlooringMasteryDao dao){
         this.productDao = productDao;
         this.taxDao = taxDao;
         this.dao = dao;
@@ -46,7 +43,7 @@ public class FlooringMasteryServiceImpl implements FlooringMasteryService{
     public List<Order> listAllOrdersForDay(String orderDate) throws FlooringMasteryPersistenceException {
         return new ArrayList<>(mapOrdersForDay(orderDate).values());
     }
-
+    @Override
     public Map<Integer, Order> mapOrdersForDay(String oderDate) throws FlooringMasteryPersistenceException{
         return new HashMap<>(dao.mapDayOrders(oderDate));
     }

@@ -42,13 +42,13 @@ public interface FlooringMasteryService {
                     BigDecimal laborCost, BigDecimal tax, BigDecimal total);
     void addOrder(String orderDate, Order order) throws FlooringMasteryPersistenceException;
 
-    String editOrderName (String newName, Order currentOrder) throws FlooringMasteryDataValidationException;
+    String editOrderName (String newName, Order currentOrder);
 
-    String editState (String state, Order currentOrder) throws FlooringMasteryDataValidationException;
+    String editState (String state, Order currentOrder);
 
     Product validateNewProduct(String inputProduct, Order currentOrder) throws FlooringMasteryDataValidationException;
 
-    BigDecimal editArea (BigDecimal area, Order currentOrder) throws FlooringMasteryDataValidationException;
+    BigDecimal editArea (BigDecimal area, Order currentOrder);
 
     Order editOrder (Order currentOrder);
 
@@ -72,6 +72,7 @@ public interface FlooringMasteryService {
     void editProductType (Product chosenProduct, Order currentOrder);
 
     public void exportAllOrders() throws FlooringMasteryPersistenceException;
+    public Map<Integer, Order> mapOrdersForDay(String oderDate) throws FlooringMasteryPersistenceException;
 
 
 

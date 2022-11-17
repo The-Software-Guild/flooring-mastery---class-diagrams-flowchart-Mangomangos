@@ -9,9 +9,10 @@ public class FlooringMasteryDaoImpl implements FlooringMasteryDao {
 
     private Map<Integer, Order> orderMap = new HashMap<>();
 
-    private FileDao fileDao = new FileDaoImpl();
+    private FileDao fileDao;
 
-    public FlooringMasteryDaoImpl() throws FlooringMasteryPersistenceException {
+    public FlooringMasteryDaoImpl(FileDao fileDao) throws FlooringMasteryPersistenceException {
+        this.fileDao = fileDao;
         String FILE_PATH = "src/main/Orders";
         orderMap = fileDao.readAllFiles(FILE_PATH);
 
