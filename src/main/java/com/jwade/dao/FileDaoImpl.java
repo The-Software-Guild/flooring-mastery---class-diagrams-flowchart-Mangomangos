@@ -198,16 +198,16 @@ public class FileDaoImpl implements FileDao{
             throw new FlooringMasteryPersistenceException(" Could not save order information");
         }
 
-        out.println(HEADER_TEXT + "Date of Order");
+        out.println(HEADER_TEXT + ",OrderDate");
 
 
         for (File file: listOfFiles){
 
             String fileName = file.getPath();
-            fileName = fileName.replace("src/main/Orders/orders_", "");
-            fileName = fileName.replace(".txt", "");
-            var date = new StringBuilder(fileName).insert(fileName.length()-4, "-").toString();
-            date = new StringBuilder(fileName).insert(fileName.length()-7, "-").toString();
+            String fileNameTrimmed = fileName.replace("src/main/Orders/orders_", "");
+            fileNameTrimmed = fileNameTrimmed.replace(".txt", "");
+            var date = new StringBuilder(fileNameTrimmed).insert(fileNameTrimmed.length()-4, "-").toString();
+            date = new StringBuilder(date).insert(date.length()-7, "-").toString();
 
 
             List<Order> orders = new ArrayList<>(readFile(fileName).values());

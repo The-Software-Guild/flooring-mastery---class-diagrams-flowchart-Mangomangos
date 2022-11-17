@@ -71,8 +71,8 @@ public interface FlooringMasteryService {
 
     void editProductType (Product chosenProduct, Order currentOrder);
 
-    public void exportAllOrders() throws FlooringMasteryPersistenceException;
-    public Map<Integer, Order> mapOrdersForDay(String oderDate) throws FlooringMasteryPersistenceException;
+    void exportAllOrders() throws FlooringMasteryPersistenceException;
+    Map<Integer, Order> mapOrdersForDay(String oderDate) throws FlooringMasteryPersistenceException;
 
 
 

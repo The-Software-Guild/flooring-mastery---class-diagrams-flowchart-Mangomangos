@@ -21,7 +21,7 @@ public class Main {
 //        FlooringMasteryController controller = new FlooringMasteryController(myView, myService);
 //        controller.run();
 
-        ApplicationContext ctx = new ClassPathXmlApplicationContext("applicationContext,xml");
+        ApplicationContext ctx = new ClassPathXmlApplicationContext("applicationContext.xml");
         FlooringMasteryController controller = ctx.getBean("controller", FlooringMasteryController.class);
         controller.run();
     }
