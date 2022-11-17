@@ -20,6 +20,14 @@ public class FileDaoImpl implements FileDao{
 
     private String HEADER_TEXT = "OrderNumber,CustomerName,State,TaxRate,ProductType,Area,CostPerSquareFoot,LaborCostPerSquareFoot,MaterialCost,LaborCost,Tax,Total";
 
+    public FileDaoImpl () {
+    }
+
+    @Override
+    public String generateFilePathName(String orderDate) {
+        return "src/main/Orders/orders_" + orderDate + ".txt";
+    }
+
     @Override
     public Order unmarshallOrder(String line) {
 
@@ -58,7 +66,7 @@ public class FileDaoImpl implements FileDao{
 
         PrintWriter out;
 
-        File orderFile = new File("src/main/Orders/orders_" + orderDate + ".txt");
+        File orderFile = new File(generateFilePathName(orderDate));
 
         if (orderFile.isFile()){
             try {
@@ -89,7 +97,7 @@ public class FileDaoImpl implements FileDao{
 
         PrintWriter out;
 
-        String fileName = "src/main/Orders/orders_" + orderDate + ".txt";
+        String fileName = generateFilePathName(orderDate);
 
         try {
             out = new PrintWriter( new FileWriter(fileName));
@@ -109,7 +117,7 @@ public class FileDaoImpl implements FileDao{
 
     @Override
     public Boolean doesFileExist(String orderDate) {
-        File f = new File("src/main/Orders/orders_" + orderDate + ".txt");
+        File f = new File(generateFilePathName(orderDate));
         return f.isFile();
     }
 

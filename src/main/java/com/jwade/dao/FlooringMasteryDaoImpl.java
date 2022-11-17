@@ -19,9 +19,8 @@ public class FlooringMasteryDaoImpl implements FlooringMasteryDao {
 
     @Override
     public Order getOrder(String orderDate, Integer orderNumber) throws FlooringMasteryPersistenceException {
-        String filePath = "src/main/Orders/orders_" + orderDate + ".txt";
         if (fileDao.doesFileExist(orderDate)){
-            Map<Integer, Order> orders = fileDao.readFile(filePath);
+            Map<Integer, Order> orders = fileDao.readFile(fileDao.generateFilePathName(orderDate));
             if (orders.get(orderNumber) != null){
                 return orders.get(orderNumber);
             }
@@ -56,8 +55,7 @@ public class FlooringMasteryDaoImpl implements FlooringMasteryDao {
 
     @Override
     public Map<Integer, Order> mapDayOrders(String orderDate) throws FlooringMasteryPersistenceException {
-        String filepath = ("src/main/Orders/orders_" + orderDate + ".txt");
-        return fileDao.readFile(filepath);
+        return fileDao.readFile(fileDao.generateFilePathName(orderDate));
     }
 
     public List<Order> orderList (Map<Integer, Order> orders){

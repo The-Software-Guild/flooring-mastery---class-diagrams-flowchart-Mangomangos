@@ -25,4 +25,6 @@ public interface FileDao {
 
     Boolean doesFileExist(String orderDate);
 
+    String generateFilePathName(String orderDate);
+
 }
