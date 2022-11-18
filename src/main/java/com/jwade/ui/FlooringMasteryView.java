@@ -68,8 +68,9 @@ public class FlooringMasteryView {
         ArrayList<Integer> list = new ArrayList<>();
         list.add(0, 0);
         for (Order i: orderList){
-            io.print(j + ". " + i.toString());
+            io.print(j + ". " + i.toString() +"\n");
             list.add(j, i.getOrderNumber());
+            j++;
         }
         return  list;
 
@@ -123,11 +124,11 @@ public class FlooringMasteryView {
     }
 
     public void mainMenuBanner(){
-        io.print("======Main Menu======");
+        io.print("\n======Main Menu======");
     }
 
     public void allOrdersBanner(){
-        io.print("======All Orders======");
+        io.print("\n======All Orders======");
     }
 
     public void allProductsBanner(){io.print("=====All Products=====");}

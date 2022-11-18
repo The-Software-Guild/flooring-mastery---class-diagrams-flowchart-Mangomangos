@@ -31,12 +31,8 @@ public class FlooringMasteryController {
             String operation = view.getMenuSelection();
             switch (operation) {
                 case "1": // display order
-                    try{
-                        listOrders();
-                        break;
-                    } catch (FlooringMasteryPersistenceException e){
-                        view.displayErrorMessage(e.getMessage());
-                    }
+                    listOrders();
+                    break;
                 case "2": //add an order
                     addOrder();
                     break;
@@ -61,10 +57,15 @@ public class FlooringMasteryController {
         }
     }
 
-    public void listOrders() throws FlooringMasteryPersistenceException {
+    public void listOrders(){
         String orderDate = view.getOrderDate();
-        List<Order> orders = service.listAllOrdersForDay(orderDate);
-        view.printAllOrders(orders);
+        try {
+            List<Order> orders = service.listAllOrdersForDay(orderDate);
+            view.printAllOrders(orders);
+        } catch (FlooringMasteryPersistenceException e){
+            view.displayErrorMessage(e.getMessage());
+        }
+
     }
 
     public void addOrder() {

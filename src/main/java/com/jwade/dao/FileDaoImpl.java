@@ -66,18 +66,21 @@ public class FileDaoImpl implements FileDao{
 
         PrintWriter out;
 
-        File orderFile = new File(generateFilePathName(orderDate));
+        String pathName = generateFilePathName(orderDate);
 
-        if (orderFile.isFile()){
+        File orderFile = new File(pathName);
+
+        if (orderFile.isFile() && (!readFile(pathName).isEmpty())){
             try {
-                out = new PrintWriter( new FileWriter(orderFile));
+                out = new PrintWriter( new FileWriter(pathName, true));
             } catch (IOException e){ throw new FlooringMasteryPersistenceException( "Could not save order to file.");
             }
 
         } else {
             try {
+                orderFile.delete();
                 orderFile.createNewFile();
-                out = new PrintWriter(new FileWriter(orderFile));
+                out = new PrintWriter(new FileWriter(pathName));
             } catch (IOException e){ throw new FlooringMasteryPersistenceException("Could not save order to file.");
 
             }
