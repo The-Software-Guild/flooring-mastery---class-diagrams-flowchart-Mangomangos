@@ -171,8 +171,10 @@ class FlooringMasteryServiceImplTest {
 
     @Test
     void generateOrderNumber() {
-        when(dao.generateCurrentMaxOrderNumber(ordersList1)).thenReturn(4);
-        assertEquals(5, service.generateOrderNumber());
+        service.generateOrderNumber();
+        service.generateOrderNumber();
+        service.generateOrderNumber();
+        assertEquals(4, service.generateOrderNumber());
     }
 
     @Test
