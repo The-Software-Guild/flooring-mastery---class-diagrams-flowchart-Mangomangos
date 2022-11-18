@@ -11,11 +11,16 @@ public class FlooringMasteryDaoImpl implements FlooringMasteryDao {
 
     private FileDao fileDao;
 
+    private String FILE_PATH = "src/main/Orders";
+
     public FlooringMasteryDaoImpl(FileDao fileDao) throws FlooringMasteryPersistenceException {
         this.fileDao = fileDao;
-        String FILE_PATH = "src/main/Orders";
-        orderMap = fileDao.readAllFiles(FILE_PATH);
+        loadFile();
+    }
 
+    @Override
+    public void loadFile() throws FlooringMasteryPersistenceException {
+        orderMap = fileDao.readAllFiles(FILE_PATH);
     }
 
     @Override
@@ -130,9 +135,9 @@ public class FlooringMasteryDaoImpl implements FlooringMasteryDao {
     }
 
     @Override
-    public Integer generateCurrentMaxOrderNumber(List<Order> listOfOrders) {
+    public Integer generateCurrentMaxOrderNumber() {
         List<Integer> listOfOrderNumbers = new ArrayList<>();
-        listOfOrders = listAllOrders();
+        List<Order>  listOfOrders = listAllOrders();
         for (Order order: listOfOrders){
             listOfOrderNumbers.add(order.getOrderNumber());
         }

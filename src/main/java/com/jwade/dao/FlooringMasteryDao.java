@@ -42,10 +42,12 @@ public interface FlooringMasteryDao {
 
     BigDecimal updateTotal(Order order, BigDecimal newTotal);
 
-    Integer generateCurrentMaxOrderNumber(List<Order> listOfOrders);
+    Integer generateCurrentMaxOrderNumber();
     List<Order> orderList (Map<Integer, Order> orders);
 
-    public void exportAllOrders() throws FlooringMasteryPersistenceException;
+    void exportAllOrders() throws FlooringMasteryPersistenceException;
+
+    void loadFile() throws FlooringMasteryPersistenceException;
 
 
 }

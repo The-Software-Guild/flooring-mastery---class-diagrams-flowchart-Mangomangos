@@ -33,10 +33,10 @@ public class FlooringMasteryController {
                 case "1": // display order
                     try{
                         listOrders();
+                        break;
                     } catch (FlooringMasteryPersistenceException e){
                         view.displayErrorMessage(e.getMessage());
                     }
-                    break;
                 case "2": //add an order
                     addOrder();
                     break;

@@ -18,13 +18,14 @@ public class FlooringMasteryServiceImpl implements FlooringMasteryService{
     private TaxDao taxDao;
     private FlooringMasteryDao dao;
 
+
     private Integer maxOrderNumber;
 
     public FlooringMasteryServiceImpl (ProductDao productDao, TaxDao taxDao, FlooringMasteryDao dao){
         this.productDao = productDao;
         this.taxDao = taxDao;
         this.dao = dao;
-        this.maxOrderNumber = dao.generateCurrentMaxOrderNumber(dao.listAllOrders());
+        this.maxOrderNumber = dao.generateCurrentMaxOrderNumber();
 
     }
 
@@ -41,7 +42,13 @@ public class FlooringMasteryServiceImpl implements FlooringMasteryService{
 
     @Override
     public List<Order> listAllOrdersForDay(String orderDate) throws FlooringMasteryPersistenceException {
-        return new ArrayList<>(mapOrdersForDay(orderDate).values());
+        List<Order> orders = new ArrayList<>(mapOrdersForDay(orderDate).values());
+        if (orders.isEmpty()){
+            throw new FlooringMasteryPersistenceException(
+                    "There are no orders for that day."
+            );
+        }
+        return orders;
     }
     @Override
     public Map<Integer, Order> mapOrdersForDay(String oderDate) throws FlooringMasteryPersistenceException{
